@@ -1,0 +1,643 @@
+{
+  "model_used": "LogisticRegression",
+  "metrics": {
+    "accuracy": 0.7438,
+    "precision": 0.6646,
+    "recall": 0.4627,
+    "f1_score": 0.507
+  },
+  "all_model_metrics": {
+    "RandomForest": {
+      "accuracy": 0.7063,
+      "precision": 0.5297,
+      "recall": 0.4422,
+      "f1_score": 0.4552
+    },
+    "GradientBoosting": {
+      "accuracy": 0.7188,
+      "precision": 0.5472,
+      "recall": 0.4666,
+      "f1_score": 0.4982
+    },
+    "ExtraTrees": {
+      "accuracy": 0.7188,
+      "precision": 0.6286,
+      "recall": 0.3503,
+      "f1_score": 0.3992
+    },
+    "LogisticRegression": {
+      "accuracy": 0.7438,
+      "precision": 0.6646,
+      "recall": 0.4627,
+      "f1_score": 0.507
+    }
+  },
+  "predicted_winner": "Australia",
+  "winner_probability": 31.3,
+  "top_5_teams": [
+    {
+      "team": "Australia",
+      "probability": 0.31290951758964897,
+      "percentage": 31.3,
+      "recent_win_pct": 68.0,
+      "wc_titles": 6,
+      "african_host_rating": 82.0,
+      "batting_rating": 85.0,
+      "bowling_rating": 88.0
+    },
+    {
+      "team": "India",
+      "probability": 0.2390582835842035,
+      "percentage": 23.9,
+      "recent_win_pct": 72.5,
+      "wc_titles": 2,
+      "african_host_rating": 78.0,
+      "batting_rating": 88.5,
+      "bowling_rating": 86.2
+    },
+    {
+      "team": "England",
+      "probability": 0.09047916457297205,
+      "percentage": 9.0,
+      "recent_win_pct": 55.0,
+      "wc_titles": 1,
+      "african_host_rating": 77.0,
+      "batting_rating": 83.0,
+      "bowling_rating": 79.5
+    },
+    {
+      "team": "South Africa",
+      "probability": 0.0836501886962809,
+      "percentage": 8.4,
+      "recent_win_pct": 64.0,
+      "wc_titles": 0,
+      "african_host_rating": 95.0,
+      "batting_rating": 84.0,
+      "bowling_rating": 83.5
+    },
+    {
+      "team": "Sri Lanka",
+      "probability": 0.07151497605560671,
+      "percentage": 7.2,
+      "recent_win_pct": 48.0,
+      "wc_titles": 1,
+      "african_host_rating": 68.0,
+      "batting_rating": 74.0,
+      "bowling_rating": 76.0
+    }
+  ],
+  "all_predictions": [
+    {
+      "team": "Australia",
+      "probability": 0.31290951758964897,
+      "percentage": 31.3,
+      "recent_win_pct": 68.0,
+      "wc_titles": 6,
+      "african_host_rating": 82.0,
+      "batting_rating": 85.0,
+      "bowling_rating": 88.0
+    },
+    {
+      "team": "India",
+      "probability": 0.2390582835842035,
+      "percentage": 23.9,
+      "recent_win_pct": 72.5,
+      "wc_titles": 2,
+      "african_host_rating": 78.0,
+      "batting_rating": 88.5,
+      "bowling_rating": 86.2
+    },
+    {
+      "team": "England",
+      "probability": 0.09047916457297205,
+      "percentage": 9.0,
+      "recent_win_pct": 55.0,
+      "wc_titles": 1,
+      "african_host_rating": 77.0,
+      "batting_rating": 83.0,
+      "bowling_rating": 79.5
+    },
+    {
+      "team": "South Africa",
+      "probability": 0.0836501886962809,
+      "percentage": 8.4,
+      "recent_win_pct": 64.0,
+      "wc_titles": 0,
+      "african_host_rating": 95.0,
+      "batting_rating": 84.0,
+      "bowling_rating": 83.5
+    },
+    {
+      "team": "Sri Lanka",
+      "probability": 0.07151497605560671,
+      "percentage": 7.2,
+      "recent_win_pct": 48.0,
+      "wc_titles": 1,
+      "african_host_rating": 68.0,
+      "batting_rating": 74.0,
+      "bowling_rating": 76.0
+    },
+    {
+      "team": "Pakistan",
+      "probability": 0.056180078489491574,
+      "percentage": 5.6,
+      "recent_win_pct": 52.0,
+      "wc_titles": 1,
+      "african_host_rating": 72.0,
+      "batting_rating": 78.0,
+      "bowling_rating": 81.0
+    },
+    {
+      "team": "West Indies",
+      "probability": 0.053907994971227766,
+      "percentage": 5.4,
+      "recent_win_pct": 46.0,
+      "wc_titles": 2,
+      "african_host_rating": 70.0,
+      "batting_rating": 75.0,
+      "bowling_rating": 72.0
+    },
+    {
+      "team": "New Zealand",
+      "probability": 0.0411896959045885,
+      "percentage": 4.1,
+      "recent_win_pct": 58.5,
+      "wc_titles": 0,
+      "african_host_rating": 75.0,
+      "batting_rating": 81.0,
+      "bowling_rating": 82.0
+    },
+    {
+      "team": "Afghanistan",
+      "probability": 0.025720811708786116,
+      "percentage": 2.6,
+      "recent_win_pct": 45.0,
+      "wc_titles": 0,
+      "african_host_rating": 65.0,
+      "batting_rating": 72.0,
+      "bowling_rating": 78.0
+    },
+    {
+      "team": "Bangladesh",
+      "probability": 0.025389288427193898,
+      "percentage": 2.5,
+      "recent_win_pct": 38.0,
+      "wc_titles": 0,
+      "african_host_rating": 60.0,
+      "batting_rating": 68.0,
+      "bowling_rating": 71.0
+    }
+  ],
+  "feature_importances": [
+    {
+      "feature": "feat_knockout_clutch",
+      "label": "Knockout Stage Win Rate",
+      "importance": 0.2383
+    },
+    {
+      "feature": "feat_h2h_top5",
+      "label": "Head-to-Head Record vs Top 5 Teams",
+      "importance": 0.17
+    },
+    {
+      "feature": "feat_consistency",
+      "label": "Tournament Consistency Rating",
+      "importance": 0.1365
+    },
+    {
+      "feature": "feat_host_adaptability",
+      "label": "African Sub-continent Host Advantage (2027 SA/ZIM/NAM)",
+      "importance": 0.1077
+    },
+    {
+      "feature": "feat_bowling_strength",
+      "label": "Bowling Economy & Wickets Rate",
+      "importance": 0.1005
+    },
+    {
+      "feature": "feat_wc_win_pct",
+      "label": "Historical WC Win Rate",
+      "importance": 0.0837
+    },
+    {
+      "feature": "feat_recent_win_pct",
+      "label": "Recent 3-Year ODI Form",
+      "importance": 0.0591
+    },
+    {
+      "feature": "feat_batting_strength",
+      "label": "Batting Depth & Average",
+      "importance": 0.059
+    },
+    {
+      "feature": "feat_title_exp",
+      "label": "World Cup Titles & Finals Record",
+      "importance": 0.0358
+    },
+    {
+      "feature": "feat_power_index",
+      "label": "Overall Composite Team Rating",
+      "importance": 0.0094
+    }
+  ],
+  "explanation": "The AI model predicts Australia as the most likely winner of the 2027 ODI World Cup with a probability score of 31.3%, closely followed by India (23.9%). Driven primarily by 'Knockout Stage Win Rate' and 'Head-to-Head Record vs Top 5 Teams'.",
+  "historical_backtest": [
+    {
+      "year": 1983,
+      "host": "England",
+      "actual_winner": "India",
+      "runner_up": "West Indies",
+      "ai_predicted_winner": "West Indies",
+      "ai_confidence": 38.5,
+      "is_correct": false,
+      "ai_team_probabilities": [
+        {
+          "team": "West Indies",
+          "probability": 38.5
+        },
+        {
+          "team": "England",
+          "probability": 24.2
+        },
+        {
+          "team": "India",
+          "probability": 18.3
+        },
+        {
+          "team": "Pakistan",
+          "probability": 11.0
+        },
+        {
+          "team": "Australia",
+          "probability": 8.0
+        }
+      ]
+    },
+    {
+      "year": 1987,
+      "host": "India & Pakistan",
+      "actual_winner": "Australia",
+      "runner_up": "England",
+      "ai_predicted_winner": "Australia",
+      "ai_confidence": 29.4,
+      "is_correct": true,
+      "ai_team_probabilities": [
+        {
+          "team": "Australia",
+          "probability": 29.4
+        },
+        {
+          "team": "England",
+          "probability": 26.1
+        },
+        {
+          "team": "India",
+          "probability": 22.5
+        },
+        {
+          "team": "Pakistan",
+          "probability": 14.0
+        },
+        {
+          "team": "West Indies",
+          "probability": 8.0
+        }
+      ]
+    },
+    {
+      "year": 1992,
+      "host": "Australia & New Zealand",
+      "actual_winner": "Pakistan",
+      "runner_up": "England",
+      "ai_predicted_winner": "Pakistan",
+      "ai_confidence": 27.8,
+      "is_correct": true,
+      "ai_team_probabilities": [
+        {
+          "team": "Pakistan",
+          "probability": 27.8
+        },
+        {
+          "team": "England",
+          "probability": 25.4
+        },
+        {
+          "team": "New Zealand",
+          "probability": 21.0
+        },
+        {
+          "team": "Australia",
+          "probability": 16.2
+        },
+        {
+          "team": "India",
+          "probability": 9.6
+        }
+      ]
+    },
+    {
+      "year": 1996,
+      "host": "India, Pakistan & Sri Lanka",
+      "actual_winner": "Sri Lanka",
+      "runner_up": "Australia",
+      "ai_predicted_winner": "Sri Lanka",
+      "ai_confidence": 31.2,
+      "is_correct": true,
+      "ai_team_probabilities": [
+        {
+          "team": "Sri Lanka",
+          "probability": 31.2
+        },
+        {
+          "team": "Australia",
+          "probability": 28.0
+        },
+        {
+          "team": "India",
+          "probability": 22.1
+        },
+        {
+          "team": "Pakistan",
+          "probability": 12.5
+        },
+        {
+          "team": "South Africa",
+          "probability": 6.2
+        }
+      ]
+    },
+    {
+      "year": 1999,
+      "host": "England",
+      "actual_winner": "Australia",
+      "runner_up": "Pakistan",
+      "ai_predicted_winner": "Australia",
+      "ai_confidence": 34.0,
+      "is_correct": true,
+      "ai_team_probabilities": [
+        {
+          "team": "Australia",
+          "probability": 34.0
+        },
+        {
+          "team": "Pakistan",
+          "probability": 26.5
+        },
+        {
+          "team": "South Africa",
+          "probability": 21.2
+        },
+        {
+          "team": "India",
+          "probability": 12.0
+        },
+        {
+          "team": "New Zealand",
+          "probability": 6.3
+        }
+      ]
+    },
+    {
+      "year": 2003,
+      "host": "South Africa",
+      "actual_winner": "Australia",
+      "runner_up": "India",
+      "ai_predicted_winner": "Australia",
+      "ai_confidence": 42.1,
+      "is_correct": true,
+      "ai_team_probabilities": [
+        {
+          "team": "Australia",
+          "probability": 42.1
+        },
+        {
+          "team": "India",
+          "probability": 26.4
+        },
+        {
+          "team": "South Africa",
+          "probability": 16.5
+        },
+        {
+          "team": "Sri Lanka",
+          "probability": 10.0
+        },
+        {
+          "team": "Pakistan",
+          "probability": 5.0
+        }
+      ]
+    },
+    {
+      "year": 2007,
+      "host": "West Indies",
+      "actual_winner": "Australia",
+      "runner_up": "Sri Lanka",
+      "ai_predicted_winner": "Australia",
+      "ai_confidence": 44.6,
+      "is_correct": true,
+      "ai_team_probabilities": [
+        {
+          "team": "Australia",
+          "probability": 44.6
+        },
+        {
+          "team": "Sri Lanka",
+          "probability": 22.1
+        },
+        {
+          "team": "South Africa",
+          "probability": 18.0
+        },
+        {
+          "team": "New Zealand",
+          "probability": 10.3
+        },
+        {
+          "team": "England",
+          "probability": 5.0
+        }
+      ]
+    },
+    {
+      "year": 2011,
+      "host": "India & Sri Lanka",
+      "actual_winner": "India",
+      "runner_up": "Sri Lanka",
+      "ai_predicted_winner": "India",
+      "ai_confidence": 33.5,
+      "is_correct": true,
+      "ai_team_probabilities": [
+        {
+          "team": "India",
+          "probability": 33.5
+        },
+        {
+          "team": "Sri Lanka",
+          "probability": 27.2
+        },
+        {
+          "team": "Australia",
+          "probability": 20.1
+        },
+        {
+          "team": "Pakistan",
+          "probability": 12.0
+        },
+        {
+          "team": "South Africa",
+          "probability": 7.2
+        }
+      ]
+    },
+    {
+      "year": 2015,
+      "host": "Australia & New Zealand",
+      "actual_winner": "Australia",
+      "runner_up": "New Zealand",
+      "ai_predicted_winner": "Australia",
+      "ai_confidence": 36.8,
+      "is_correct": true,
+      "ai_team_probabilities": [
+        {
+          "team": "Australia",
+          "probability": 36.8
+        },
+        {
+          "team": "New Zealand",
+          "probability": 28.4
+        },
+        {
+          "team": "India",
+          "probability": 18.0
+        },
+        {
+          "team": "South Africa",
+          "probability": 11.2
+        },
+        {
+          "team": "Pakistan",
+          "probability": 5.6
+        }
+      ]
+    },
+    {
+      "year": 2019,
+      "host": "England",
+      "actual_winner": "England",
+      "runner_up": "New Zealand",
+      "ai_predicted_winner": "India",
+      "ai_confidence": 28.9,
+      "is_correct": false,
+      "ai_team_probabilities": [
+        {
+          "team": "India",
+          "probability": 28.9
+        },
+        {
+          "team": "England",
+          "probability": 27.5
+        },
+        {
+          "team": "Australia",
+          "probability": 22.0
+        },
+        {
+          "team": "New Zealand",
+          "probability": 14.1
+        },
+        {
+          "team": "Pakistan",
+          "probability": 7.5
+        }
+      ]
+    },
+    {
+      "year": 2023,
+      "host": "India",
+      "actual_winner": "Australia",
+      "runner_up": "India",
+      "ai_predicted_winner": "India",
+      "ai_confidence": 35.2,
+      "is_correct": false,
+      "ai_team_probabilities": [
+        {
+          "team": "India",
+          "probability": 35.2
+        },
+        {
+          "team": "Australia",
+          "probability": 28.6
+        },
+        {
+          "team": "South Africa",
+          "probability": 15.4
+        },
+        {
+          "team": "New Zealand",
+          "probability": 12.0
+        },
+        {
+          "team": "Pakistan",
+          "probability": 8.8
+        }
+      ]
+    },
+    {
+      "year": 2027,
+      "host": "South Africa, Zimbabwe & Namibia",
+      "actual_winner": "TBD",
+      "runner_up": "TBD",
+      "ai_predicted_winner": "Australia",
+      "ai_confidence": 31.3,
+      "is_correct": null,
+      "ai_team_probabilities": [
+        {
+          "team": "Australia",
+          "probability": 31.3
+        },
+        {
+          "team": "India",
+          "probability": 23.9
+        },
+        {
+          "team": "England",
+          "probability": 9.0
+        },
+        {
+          "team": "South Africa",
+          "probability": 8.4
+        },
+        {
+          "team": "Sri Lanka",
+          "probability": 7.2
+        },
+        {
+          "team": "Pakistan",
+          "probability": 5.6
+        },
+        {
+          "team": "West Indies",
+          "probability": 5.4
+        },
+        {
+          "team": "New Zealand",
+          "probability": 4.1
+        },
+        {
+          "team": "Afghanistan",
+          "probability": 2.6
+        },
+        {
+          "team": "Bangladesh",
+          "probability": 2.5
+        }
+      ]
+    }
+  ],
+  "historical_accuracy": {
+    "correct_predictions": 8,
+    "total_tournaments": 11,
+    "accuracy_percentage": 72.7
+  }
+}

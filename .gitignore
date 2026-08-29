@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+
+# Production build
+dist/
+build/
+
+# Python cache & virtual environment
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# System files
+.DS_Store
+*.pem
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.swp
