@@ -1,0 +1,11 @@
+Team,ICC_Rank,ICC_Rating,Recent_Win_Pct,Batting_Rating,Bowling_Rating,Consistency_Score,African_Host_Rating,H2H_Top5_Win_Pct,Recent_Tournament_Rank
+India,1,121,72.5,88.5,86.2,87.0,78.0,68.0,1
+Australia,2,118,68.0,85.0,88.0,89.0,82.0,65.0,1
+South Africa,3,112,64.0,84.0,83.5,76.0,95.0,58.0,3
+New Zealand,4,106,58.5,81.0,82.0,84.0,75.0,52.0,4
+England,5,104,55.0,83.0,79.5,74.0,77.0,50.0,5
+Pakistan,6,98,52.0,78.0,81.0,70.0,72.0,44.0,6
+Sri Lanka,7,92,48.0,74.0,76.0,68.0,68.0,38.0,7
+West Indies,8,88,46.0,75.0,72.0,65.0,70.0,35.0,8
+Afghanistan,9,84,45.0,72.0,78.0,72.0,65.0,32.0,6
+Bangladesh,10,78,38.0,68.0,71.0,62.0,60.0,25.0,9
