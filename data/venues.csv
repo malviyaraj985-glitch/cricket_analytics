@@ -1,0 +1,9 @@
+venue_id,venue_name,city,country,latitude,longitude,pitch_profile,capacity
+1,The Wanderers Stadium,Johannesburg,South Africa,-26.1317,28.0569,Pace-Friendly,34000
+2,SuperSport Park,Centurion,South Africa,-25.8603,28.1894,Pace-Friendly,22000
+3,Kingsmead Cricket Ground,Durban,South Africa,-29.8517,31.0298,Balanced,25000
+4,Narendra Modi Stadium,Ahmedabad,India,23.0917,72.5975,Batting-Friendly,132000
+5,Melbourne Cricket Ground,Melbourne,Australia,-37.82,144.9834,Balanced,100024
+6,Lord's Cricket Ground,London,England,51.5298,-0.1726,Balanced,31100
+7,Eden Gardens,Kolkata,India,22.5646,88.3433,Spin-Friendly,68000
+8,Sydney Cricket Ground,Sydney,Australia,-33.8916,151.2248,Batting-Friendly,48000

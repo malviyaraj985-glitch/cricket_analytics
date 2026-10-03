@@ -1,0 +1,11 @@
+team_id,team_name,short_name,region,country,active_status
+1,India,IND,Asia,India,1
+2,Australia,AUS,Oceania,Australia,1
+3,South Africa,SA,Africa,South Africa,1
+4,England,ENG,Europe,England,1
+5,New Zealand,NZ,Oceania,New Zealand,1
+6,Pakistan,PAK,Asia,Pakistan,1
+7,Sri Lanka,SL,Asia,Sri Lanka,1
+8,West Indies,WI,Americas,West Indies,1
+9,Afghanistan,AFG,Asia,Afghanistan,1
+10,Bangladesh,BAN,Asia,Bangladesh,1

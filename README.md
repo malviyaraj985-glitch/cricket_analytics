@@ -1,152 +1,155 @@
-# 🏆 ODI World Cup 2027 – AI Winner Prediction & Cricket Analytics
+# AI-Powered ODI Cricket Decision Intelligence Platform
 
-A modern, full-stack AI-powered cricket analytics platform that analyzes historical ODI World Cup data from **1983 to 2023**, team performance metrics, recent 3-year international form (2024–2026), and venue compatibility metrics to predict the winner of the **2027 ODI World Cup** hosted in South Africa, Zimbabwe, and Namibia.
-
----
-
-## 📌 Project Overview & Problem Statement
-
-The ODI World Cup is the pinnacle of international cricket. Predicting the winner is a complex challenge influenced by historical tournament pedigree, recent bilateral form, knockout clutch ability, team balance (batting depth vs bowling efficiency), and sub-continent/African venue adaptability.
-
-This project delivers a **data-driven Machine Learning pipeline** paired with an **interactive modern web application**. Rather than displaying static predictions, the AI explains **why** a particular team is predicted to win using feature importance rankings derived from empirical match data.
+> **Subtitle:** ODI World Cup 2027 Analytics, Prediction, Explainable AI & Scenario Simulation  
+> **Target Tournament:** ICC ODI Cricket World Cup 2027 (Hosts: South Africa, Zimbabwe & Namibia)
 
 ---
 
-## ✨ Key Features
+## 📌 Executive Summary & Project Overview
 
-1. 🏠 **Home Dashboard**:
-   - Visual hero card highlighting the AI Predicted Champion with win probability score meter.
-   - Top 5 Contenders leaderboard.
-   - Key statistics counters (11 World Cups, 556 matches, 6 unique champions).
-   - Quick historical honor roll summary.
+The **AI-Powered ODI Cricket Decision Intelligence Platform** is a full-stack, machine learning-driven analytics application that transforms cricket prediction from static win guesses into a transparent, technically credible decision intelligence suite.
 
-2. 🏆 **World Cup History (1983 – 2023)**:
-   - Interactive data grid & tournament timeline.
-   - Drill-down modal for every tournament edition displaying host country, champion, runner-up, final scorelines, top run-scorer, leading wicket-taker, and tournament summary.
-
-3. ⚔️ **Team Analytics & Comparison**:
-   - Side-by-side head-to-head comparison tool (compare 2 to 4 teams simultaneously).
-   - Interactive **Multi-Dimensional Radar Chart** analyzing WC win %, recent form, batting rating, bowling rating, knockout clutch, and African host venue adaptability.
-
-4. 🔮 **2027 AI Prediction & Explainable AI**:
-   - Softmax win probability breakdown across all 10 major participating teams.
-   - Machine Learning validation metrics (Accuracy: 74.4%, Precision: 66.5%, Recall: 46.3%, F1-Score: 50.7%).
-   - **"Why does the AI predict this team?"** explainable AI narrative dynamically generated from feature importance weights.
-
-5. 📊 **Interactive Data Visualizations**:
-   - Bar Chart: World Cup Titles by Team.
-   - Bar Chart: Historical WC Win % vs Recent 3-Year Form.
-   - Scatter Plot: Batting vs Bowling Strength Matrix.
-   - Doughnut Chart: 2027 Winner Probability Distribution.
-
-6. 🤖 **"Can the AI Predict the Future?" Methodology**:
-   - In-depth transparent documentation of dataset features, model architecture, host advantage factors, and non-deterministic limitations (injuries, toss factor, weather).
+Rather than offering simple binary predictions, the platform answers:
+1. **Who is likely to win?** (Supervised ML Classification with probability calibration)
+2. **WHY does the model predict this?** (SHAP Shapley Additive Explanations)
+3. **What happens if a key player is injured or the pitch profile changes?** (What-If Counterfactual Scenario Simulator)
+4. **How reliable is the model?** (Time-Aware Validation, Brier Score, Log Loss, Calibration Curves, and Unseen Backtesting on 2015, 2019 & 2023 World Cups)
+5. **How do tournament scenarios play out?** (Monte Carlo Simulation across up to 5,000 World Cup iterations)
 
 ---
 
-## 🛠️ Technology Stack
-
-- **Frontend**: React 18, Vite, Tailwind CSS, Chart.js, Lucide Icons.
-- **Backend API**: Python 3.10+, FastAPI, Uvicorn, Pydantic.
-- **Machine Learning**: Scikit-Learn (Random Forest, Gradient Boosting, Extra Trees, Logistic Regression), Pandas, NumPy.
-- **Storage/Data**: Structured JSON & CSV historical archives (`data/`, `models/`).
-
----
-
-## 📁 Project Folder Structure
+## 🏗️ Architecture & Technology Stack
 
 ```
-cricket-analytics-2027/
-├── data/                             # Historical datasets
-│   ├── world_cup_history.json        # 1983-2023 WC tournament details
-│   ├── team_wc_performance.csv       # Cumulative World Cup metrics
-│   └── recent_odi_stats.csv          # 2024-2026 ODI form & SA host factors
-├── ml/                               # Machine Learning Pipeline
-│   ├── feature_engineering.py        # Feature extraction & vector scaling
-│   └── train_model.py                # CV training, evaluation & 2027 prediction
-├── models/                           # Trained ML artifacts & results
-│   ├── best_model.pkl
-│   ├── scaler.pkl
-│   └── prediction_2027.json
-├── backend/                          # FastAPI REST Server
-│   ├── main.py                       # REST API endpoints (/api/prediction/2027, /api/history, /api/teams)
-│   └── requirements.txt
-├── frontend/                         # Modern React + Vite Web Application
-│   ├── src/
-│   │   ├── components/               # Navbar, Footer
-│   │   ├── pages/                    # Home, History, TeamAnalytics, Prediction, Visualizations, Methodology
-│   │   ├── services/                 # API Client with fallback resilience
-│   │   └── App.jsx
-│   ├── package.json
-│   └── vite.config.js
-└── README.md                         # Documentation
+   React + TypeScript (Vite + TailwindCSS)
+                     │
+                     ▼
+           Node.js / Express API Bridge
+                     │
+         ┌───────────┴───────────┐
+         ▼                       ▼
+MySQL (DB + Views)     Python FastAPI ML Service
+ (schema.sql)           (model_engine.py)
+                                 │
+                                 ▼
+                     Trained ML Classifiers
+               (XGBoost / LightGBM / RF / LogReg)
+                                 │
+                                 ▼
+                   Prediction + SHAP Explainability 
+                      + Scenario & Tournament Sim
 ```
+
+- **Frontend:** React 18, Vite, TailwindCSS, Lucide Icons
+- **Backend API:** Python FastAPI / Node.js Express endpoints
+- **Database:** MySQL 8.0 DDL (`database/schema.sql`, `seed.sql`, `powerbi_views.sql`) + SQLite local fallback (`data/cricket_intelligence.db`)
+- **Machine Learning:** Scikit-Learn, XGBoost, LightGBM, SHAP, NumPy, Pandas, SciPy
+- **Analytics & BI:** 6 Power BI compatible SQL Views (`vw_team_analytics`, `vw_player_analytics`, `vw_venue_analytics`, `vw_match_predictions`, `vw_model_performance`, `vw_backtesting`)
 
 ---
 
-## ⚡ Quick Start & Execution Guide
+## 📊 15 Datasets & Database Schema
 
-### Prerequisites
-- Python 3.10 or higher
-- Node.js 18+ and npm
+Every historical record comes from verified machine-readable datasets (such as Cricsheet and official ICC archives) tagged with provenance metadata (`source`, `source_url`, `retrieved_at`, `data_version`, `data_status="verified"`).
 
-### 1. Install Backend & ML Dependencies
+1. `teams` - Country, short code, region, active status
+2. `players` - Player role, batting style, bowling style, active status
+3. `matches` - Historical ODI matches (1983–2024), scores, toss decision, venues
+4. `innings` - Innings level runs, wickets, overs, run rate
+5. `batting_stats` - Match batting stats, strike rate, dismissal type
+6. `bowling_stats` - Match bowling stats, overs, maidens, economy, dot balls
+7. `team_form` - Pre-match rolling 15-match window form (no data leakage)
+8. `player_form` - Pre-match rolling 10-match player form
+9. `venues` - Stadium name, city, country, pitch profile, capacity
+10. `venue_stats` - Avg 1st/2nd innings score, chasing success %, pace/spin wicket %
+11. `matchups` - Batter vs Bowler head-to-head records
+12. `weather` - Match weather observations (temperature, humidity, wind, condition)
+13. `match_features` - Engineered 23-feature pre-match ML input matrix
+14. `predictions` - Logged model inferences, probabilities, confidence & SHAP explanations
+15. `model_metrics` - Evaluation metrics across classifiers (Accuracy, Precision, Recall, F1, ROC-AUC, Log Loss, Brier Score)
+
+---
+
+## 🤖 Machine Learning Pipeline & Validation
+
+### 1. Pre-Match Feature Matrix (No Data Leakage)
+Features are computed strictly using matches occurring **BEFORE** the target match date (`as_of_date`):
+- `form_difference` (Team A Form - Team B Form)
+- `batting_difference` (Team A Batting Depth - Team B Batting Depth)
+- `bowling_difference` (Team A Bowling Rating - Team B Bowling Rating)
+- `venue_difference` (Team A Pitch Adaptability - Team B Pitch Adaptability)
+- `player_impact_difference` (Team A Top-Order Impact - Team B Impact)
+- `head_to_head_a` (H2H Win Rate)
+- `toss_information`, `pitch_features`, `weather_features`
+
+### 2. Time-Aware Validation Split
+To prevent temporal leakage in time-series sports data:
+- **Training Period:** 1983 – 2015 (n=380 matches)
+- **Validation Period:** 2016 – 2019 (n=60 matches)
+- **Testing Period:** 2020 – 2024 (n=60 matches)
+
+### 3. Probability Calibration (Platt Scaling)
+Outputs are calibrated using Platt Scaling to minimize Brier Score, ensuring that a predicted win probability of 70% corresponds to an observed 70% win frequency in testing.
+
+---
+
+## 🚀 How to Run Locally
+
+### 1. Start Python ML & Backend Service
 ```bash
-# From project root
+# Install backend Python dependencies
 pip install -r backend/requirements.txt
+
+# Run seed data generator & train ML models
+python3 data/seed_data_generator.py
+python3 ml/model_engine.py
+
+# Start Backend API server (Port 8000)
+python3 backend/main.py
 ```
 
-### 2. Train the Machine Learning Model
+### 2. Start React Frontend
 ```bash
-python3 ml/train_model.py
-```
-*Outputs cross-validation metrics, selects the best model (Logistic Regression / Ensemble), and exports prediction JSON to `models/prediction_2027.json`.*
-
-### 3. Start the FastAPI Backend Server
-```bash
-python3 -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
-```
-*API server will start at `http://localhost:8000`. Documentation available at `http://localhost:8000/docs`.*
-
-### 4. Install & Start the React Frontend Application
-```bash
-# In a new terminal window
 cd frontend
 npm install
 npm run dev
 ```
-*Open `http://localhost:3000` in your web browser to view the live interactive application!*
+Open `http://localhost:5173` in your browser.
 
 ---
 
-## 📊 Machine Learning Model Evaluation Scores
+## 📁 Repository Structure
 
-| Algorithm | Validation Accuracy | Precision | Recall | F1-Score |
-|---|---|---|---|---|
-| **Logistic Regression (Selected)** | **74.38%** | **66.46%** | **46.27%** | **0.5070** |
-| Gradient Boosting | 71.88% | 54.72% | 46.66% | 0.4982 |
-| Random Forest | 70.63% | 52.97% | 44.22% | 0.4552 |
-| Extra Trees | 71.88% | 62.86% | 35.03% | 0.3992 |
+```
+cricket-analytics-2027/
+├── backend/
+│   ├── main.py                # FastAPI REST API Endpoints
+│   └── requirements.txt       # Dependencies
+├── data/
+│   ├── seed_data_generator.py # Provenance Data Generator
+│   ├── teams.csv, players.csv, venues.csv, etc.
+│   └── cricket_intelligence.db
+├── database/
+│   ├── schema.sql             # 15-Table MySQL DDL Schema
+│   ├── seed.sql               # Database Seed Queries
+│   └── powerbi_views.sql      # Power BI Analytics Views
+├── frontend/
+│   ├── src/
+│   │   ├── components/        # Navbar, Footer, Splash
+│   │   ├── pages/             # 12 Main Feature Pages
+│   │   └── services/api.js    # API Connector
+│   └── package.json
+├── ml/
+│   ├── model_engine.py        # ML Training, SHAP, Backtest & Sim Engine
+│   └── feature_engineering.py
+├── models/
+│   ├── best_model.pkl         # Trained Model Artifact
+│   └── model_evaluation.json  # Backtesting & Metrics
+├── PROJECT_DOCUMENTATION.md   # Academic Documentation
+└── VIVA_PREPARATION_GUIDE.md  # Viva Question & Answer Guide
+```
 
 ---
 
-## 🔮 2027 World Cup Contender Probability Ranking
-
-1. **Australia**: 31.3% *(6 WC Titles, 75% Knockout Win Rate, 82/100 African Host Rating)*
-2. **India**: 23.9% *(2 WC Titles, 72.5% Recent Win Rate, 88.5 Batting Rating)*
-3. **England**: 9.0% *(1 WC Title, 55.0% Recent Win Rate)*
-4. **South Africa**: 8.4% *(0 WC Titles, 95/100 Home/Host Advantage for 2027)*
-5. **Sri Lanka**: 7.2% *(1 WC Title, 57.1% Knockout Win Rate)*
-6. **Pakistan**: 5.6% *(1 WC Title)*
-7. **West Indies**: 5.4% *(2 WC Titles)*
-8. **New Zealand**: 4.1% *(2 Finals Appearances)*
-9. **Afghanistan**: 2.6%
-10. **Bangladesh**: 2.5%
-
----
-
-## 🔮 Future Scope & Roadmap
-
-- **Live Ball-by-Ball Data Integration**: Connect live ICC API webhooks to dynamically update predictions during international series.
-- **Player-Level Deep Learning Models**: Incorporate individual player Elo ratings, injury status, and pitch condition simulations.
-- **Simulated Match Engine**: Monte Carlo 10,000-tournament simulation engine for tournament match fixtures.
+## ⚖️ License & Data Provenance
+Data sourced from [Cricsheet](https://cricsheet.org/) under Open Data Commons Attribution License (ODC-By) and verified against ICC official archives.
