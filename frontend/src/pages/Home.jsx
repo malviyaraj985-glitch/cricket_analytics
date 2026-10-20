@@ -5,8 +5,8 @@ import WorldCupLegacy from '../components/WorldCupLegacy';
 export default function Home({ onNavigate, dataSources }) {
   const counts = dataSources?.summary_counts || {
     teams: 10,
-    players: 20,
-    venues: 8,
+    players: 94,
+    venues: 32,
     matches: 500,
     features_engineered: 23
   };

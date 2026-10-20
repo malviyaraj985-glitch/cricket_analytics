@@ -497,7 +497,7 @@ export async function fetchDataSources() {
         { name: "Cricsheet ODI Match Data", source_url: "https://cricsheet.org/", retrieved_at: "2026-10-03T20:00:00Z", data_version: "v1.0-cricsheet", data_status: "verified", record_count: 500 },
         { name: "Official ICC ODI Rankings", source_url: "https://www.icc-cricket.com/", retrieved_at: "2026-10-03T20:00:00Z", data_version: "v2024.1", data_status: "verified", record_count: 10 }
       ],
-      summary_counts: { teams: 10, players: 20, venues: 8, matches: 500, matchups: 8, features_engineered: 23 }
+      summary_counts: { teams: 10, players: 94, venues: 32, matches: 500, matchups: 8, features_engineered: 23 }
     };
   }
 }

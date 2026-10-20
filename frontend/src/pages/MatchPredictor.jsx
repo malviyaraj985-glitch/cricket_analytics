@@ -15,7 +15,19 @@ export default function MatchPredictor({ onNavigate, latestPrediction, onPredict
   const [prediction, setPrediction] = useState(latestPrediction || null);
 
   const teamsList = ["India", "Australia", "South Africa", "England", "New Zealand", "Pakistan", "Sri Lanka", "West Indies", "Afghanistan", "Bangladesh"];
-  const venuesList = ["The Wanderers Stadium", "SuperSport Park", "Kingsmead Cricket Ground", "Narendra Modi Stadium", "Melbourne Cricket Ground", "Lord's Cricket Ground"];
+  const wc2027Venues = [
+    "The Wanderers Stadium", "SuperSport Park", "Kingsmead Cricket Ground", "St George's Park",
+    "Newlands Cricket Ground", "Boland Park", "Mangaung Oval", "Buffalo Park",
+    "Harare Sports Club", "Queens Sports Club", "Wanderers Cricket Ground"
+  ];
+  const historicalVenues = [
+    "Narendra Modi Stadium", "Wankhede Stadium", "Eden Gardens", "M. Chinnaswamy Stadium",
+    "MA Chidambaram Stadium", "Arun Jaitley Stadium", "Rajiv Gandhi International Cricket Stadium",
+    "Melbourne Cricket Ground", "Sydney Cricket Ground", "Adelaide Oval", "Perth Stadium",
+    "Lord's Cricket Ground", "The Oval", "Edgbaston", "Trent Bridge",
+    "Eden Park", "Hagley Oval", "Gaddafi Stadium", "R. Premadasa Stadium",
+    "Dubai International Cricket Stadium", "Kensington Oval"
+  ];
 
   const runPrediction = async (params) => {
     setLoading(true);
@@ -108,7 +120,12 @@ export default function MatchPredictor({ onNavigate, latestPrediction, onPredict
               onChange={(e) => setVenue(e.target.value)}
               className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg p-2.5 text-xs font-semibold focus:border-emerald-500 outline-none"
             >
-              {venuesList.map(v => <option key={v} value={v}>{v}</option>)}
+              <optgroup label="Official 2027 World Cup Host Venues (SA / ZIM / NAM)">
+                {wc2027Venues.map(v => <option key={v} value={v}>{v}</option>)}
+              </optgroup>
+              <optgroup label="Historical International ODI Venues">
+                {historicalVenues.map(v => <option key={v} value={v}>{v}</option>)}
+              </optgroup>
             </select>
           </div>
 
