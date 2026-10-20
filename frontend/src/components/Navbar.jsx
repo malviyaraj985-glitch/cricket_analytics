@@ -66,7 +66,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
   const activeItem = navItems.find((item) => item.id === activeTab) || navItems[0];
 
   return (
-    <header className="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+    <header className="bg-slate-950 border-b border-slate-800 sticky top-0 z-50 shadow-md">
       <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
@@ -97,7 +97,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
               className={`flex items-center space-x-2.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 ${
                 menuOpen 
                   ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-lg shadow-emerald-500/20' 
-                  : 'bg-slate-800/90 hover:bg-slate-800 text-white border-slate-700/80 hover:border-emerald-500/50 shadow-sm'
+                  : 'bg-slate-800 hover:bg-slate-700 text-white border-slate-700/80 hover:border-emerald-500/50 shadow-sm'
               }`}
               aria-label="Toggle navigation menu"
               aria-expanded={menuOpen}
@@ -120,17 +120,18 @@ export default function Navbar({ activeTab, setActiveTab }) {
               </span>
             </button>
 
-            {/* Dropdown Navigation Panel */}
+            {/* Dropdown Navigation Panel with 100% Solid Opaque Background */}
             {menuOpen && (
               <div
                 ref={menuRef}
                 id="navigation-dropdown-menu"
-                className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-slate-900/98 border border-slate-800 rounded-2xl shadow-2xl p-2 z-50 backdrop-blur-xl animate-fadeIn max-h-[calc(100vh-5rem)] overflow-y-auto"
+                className="absolute right-0 top-full mt-2 w-72 sm:w-80 max-w-[calc(100vw-2rem)] bg-slate-950 border border-slate-800 rounded-2xl shadow-2xl shadow-black/90 p-2.5 z-50 animate-fadeIn max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain"
+                style={{ backgroundColor: '#020617', opacity: 1 }}
                 role="menu"
                 aria-orientation="vertical"
               >
                 {/* Menu Header with quick info */}
-                <div className="px-3 py-2 border-b border-slate-800/80 flex items-center justify-between text-xs mb-1">
+                <div className="px-3 py-2 bg-slate-900 border-b border-slate-800 rounded-xl flex items-center justify-between text-xs mb-1.5">
                   <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">
                     Navigation Menu
                   </span>
@@ -140,7 +141,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
                 </div>
 
                 {/* Clean Vertical Navigation List */}
-                <nav className="space-y-1 py-1">
+                <nav className="space-y-1.5 py-0.5">
                   {navItems.map((item) => {
                     const Icon = item.icon;
                     const isActive = activeTab === item.id;
@@ -151,12 +152,12 @@ export default function Navbar({ activeTab, setActiveTab }) {
                         role="menuitem"
                         className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all text-left ${
                           isActive
-                            ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 font-extrabold'
-                            : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+                            ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 font-extrabold border border-emerald-400'
+                            : 'text-slate-300 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800/40 hover:border-slate-700'
                         }`}
                       >
                         <div className="flex items-center space-x-3 truncate">
-                          <div className={`p-1.5 rounded-lg ${
+                          <div className={`p-1.5 rounded-lg shrink-0 ${
                             isActive 
                               ? 'bg-slate-950/20 text-slate-950' 
                               : 'bg-slate-800 text-emerald-400'
@@ -175,7 +176,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
                 </nav>
 
                 {/* Menu Footer */}
-                <div className="px-3 py-2 border-t border-slate-800/80 text-[10px] text-slate-400 flex items-center justify-between mt-1">
+                <div className="px-3 py-2 bg-slate-900/80 border-t border-slate-800/80 rounded-xl text-[10px] text-slate-400 flex items-center justify-between mt-1.5">
                   <span>Press <kbd className="px-1 py-0.5 rounded bg-slate-800 font-mono text-[9px] text-slate-300 border border-slate-700">Esc</kbd> to close</span>
                   <span className="text-emerald-400 font-semibold">Active: {activeItem.label}</span>
                 </div>
@@ -186,11 +187,11 @@ export default function Navbar({ activeTab, setActiveTab }) {
         </div>
       </div>
 
-      {/* Backdrop overlay to capture outside clicks */}
+      {/* Backdrop overlay to dim the underlying page and capture outside clicks */}
       {menuOpen && (
         <div 
           onClick={() => setMenuOpen(false)}
-          className="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-[2px] transition-opacity"
+          className="fixed inset-0 z-40 bg-black/60 transition-opacity"
           aria-hidden="true"
         />
       )}
