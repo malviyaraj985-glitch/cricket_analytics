@@ -47,7 +47,7 @@ The system employs a decoupled, modular microservices architecture:
 All historical match records are ingested from machine-readable datasets (Cricsheet and official ICC archives) carrying data provenance fields (`source`, `source_url`, `retrieved_at`, `data_version`, `data_status="verified"`):
 - `teams`: 10 core ODI World Cup nations with historical records and active status.
 - `players`: 20+ top ODI players with roles, batting/bowling styles, and performance statistics.
-- `venues`: 8 international stadiums with coordinates, capacity, and historical pitch profiles.
+- `venues`: 32 international stadiums (including 11 confirmed 2027 World Cup host venues in South Africa, Zimbabwe, and Namibia, plus 21 historical international venues) with coordinates, capacity, pitch profiles, and verified ground records.
 - `match_features`: 23 pre-match engineered features covering form differences, batting/bowling strength deltas, venue adaptability, player impact, head-to-head records, toss decisions, weather, and pitch moisture.
 
 ---
