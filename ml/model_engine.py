@@ -309,18 +309,63 @@ def train_and_eval_all_models():
     print(f"---> Successfully trained symmetric model: {best_model_name} (F1: {best_f1:.4f})")
     return summary_output
 
+PLAYERS_CSV_PATH = os.path.join(DATA_DIR, "players.csv")
+PLAYERS_MAP = {}
+if os.path.exists(PLAYERS_CSV_PATH):
+    try:
+        p_df = pd.read_csv(PLAYERS_CSV_PATH)
+        for _, row in p_df.iterrows():
+            p_name = str(row["player_name"]).strip()
+            PLAYERS_MAP[p_name] = {
+                "team_id": row["team_id"],
+                "role": str(row["role"]).strip()
+            }
+    except Exception:
+        pass
+
 def run_match_prediction(
     team_a: str, team_b: str, venue: str, toss_winner: str = "",
     toss_decision: str = "Bat", pitch_profile: str = "Balanced",
-    weather: str = "Clear"
+    weather: str = "Clear",
+    missing_player_a: str = "None",
+    missing_player_b: str = "None"
 ) -> Dict[str, Any]:
     """
     Computes mathematically symmetric, order-invariant match predictions.
     P(A vs B) for Team A is strictly identical to P(B vs A) for Team A.
+    Supports counterfactual modifiers: venue, pitch profile, toss outcome/decision, and key player availability.
     """
-    r_a = TEAM_STATS.get(team_a, {"rating": 90, "win_pct": 50.0, "batting": 75.0, "bowling": 75.0, "form": 75.0, "impact": 75.0, "african_host": 70.0, "spin_rating": 75.0, "pace_rating": 75.0})
-    r_b = TEAM_STATS.get(team_b, {"rating": 90, "win_pct": 50.0, "batting": 75.0, "bowling": 75.0, "form": 75.0, "impact": 75.0, "african_host": 70.0, "spin_rating": 75.0, "pace_rating": 75.0})
+    r_a = dict(TEAM_STATS.get(team_a, {"rating": 90, "win_pct": 50.0, "batting": 75.0, "bowling": 75.0, "form": 75.0, "impact": 75.0, "african_host": 70.0, "spin_rating": 75.0, "pace_rating": 75.0}))
+    r_b = dict(TEAM_STATS.get(team_b, {"rating": 90, "win_pct": 50.0, "batting": 75.0, "bowling": 75.0, "form": 75.0, "impact": 75.0, "african_host": 70.0, "spin_rating": 75.0, "pace_rating": 75.0}))
     
+    # Missing Player adjustments for Team A
+    if missing_player_a and missing_player_a != "None":
+        p_info = PLAYERS_MAP.get(missing_player_a, {"role": "Batter"})
+        role = p_info.get("role", "Batter")
+        r_a["impact"] = max(50.0, r_a["impact"] - 9.0)
+        if role in ["Batter", "Wicket-Keeper", "Wicketkeeper"]:
+            r_a["batting"] = max(50.0, r_a["batting"] - 4.0)
+        elif role == "Bowler":
+            r_a["bowling"] = max(50.0, r_a["bowling"] - 4.0)
+        elif role in ["All-Rounder", "All-rounder"]:
+            r_a["batting"] = max(50.0, r_a["batting"] - 2.5)
+            r_a["bowling"] = max(50.0, r_a["bowling"] - 2.5)
+            r_a["impact"] = max(50.0, r_a["impact"] - 2.0)
+
+    # Missing Player adjustments for Team B
+    if missing_player_b and missing_player_b != "None":
+        p_info = PLAYERS_MAP.get(missing_player_b, {"role": "Batter"})
+        role = p_info.get("role", "Batter")
+        r_b["impact"] = max(50.0, r_b["impact"] - 9.0)
+        if role in ["Batter", "Wicket-Keeper", "Wicketkeeper"]:
+            r_b["batting"] = max(50.0, r_b["batting"] - 4.0)
+        elif role == "Bowler":
+            r_b["bowling"] = max(50.0, r_b["bowling"] - 4.0)
+        elif role in ["All-Rounder", "All-rounder"]:
+            r_b["batting"] = max(50.0, r_b["batting"] - 2.5)
+            r_b["bowling"] = max(50.0, r_b["bowling"] - 2.5)
+            r_b["impact"] = max(50.0, r_b["impact"] - 2.0)
+
     venue_a = get_venue_rating(team_a, venue)
     venue_b = get_venue_rating(team_b, venue)
     
@@ -336,9 +381,9 @@ def run_match_prediction(
     # Toss advantage (anti-symmetric)
     toss_adv = 0.0
     if toss_winner == team_a:
-        toss_adv = 1.2
+        toss_adv = 1.2 if toss_decision == "Bat" else 0.8
     elif toss_winner == team_b:
-        toss_adv = -1.2
+        toss_adv = -1.2 if toss_decision == "Bat" else -0.8
         
     form_diff = r_a["form"] - r_b["form"]
     batting_diff = r_a["batting"] - r_b["batting"]

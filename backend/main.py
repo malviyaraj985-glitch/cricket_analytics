@@ -159,36 +159,79 @@ def explain_match(req: ExplainRequest):
 
 @app.post("/api/simulate")
 def simulate_scenario(req: SimulateRequest):
-    baseline = run_match_prediction(req.team_a, req.team_b, req.venue)
+    # 1. Baseline Match State (standard pitch, neutral toss, full strength squads)
+    baseline = run_match_prediction(
+        team_a=req.team_a,
+        team_b=req.team_b,
+        venue=req.venue,
+        toss_winner="",
+        toss_decision="Bat",
+        pitch_profile="Balanced",
+        missing_player_a="None",
+        missing_player_b="None"
+    )
     
-    # Extract modified parameters
+    # 2. Extract counterfactual modifiers
     mods = req.modified_features or {}
     player_m_a = mods.get("player_missing_a", "None")
     player_m_b = mods.get("player_missing_b", "None")
     venue = mods.get("venue", req.venue)
-    toss_w = mods.get("toss_winner", req.team_a)
+    toss_w = mods.get("toss_winner", "")
+    toss_d = mods.get("toss_decision", "Bat")
     pitch = mods.get("pitch_profile", "Balanced")
     weather = mods.get("weather", "Clear")
     
+    # 3. Scenario Match State
     scenario = run_match_prediction(
         team_a=req.team_a,
         team_b=req.team_b,
         venue=venue,
         toss_winner=toss_w,
+        toss_decision=toss_d,
         pitch_profile=pitch,
-        weather=weather
+        weather=weather,
+        missing_player_a=player_m_a,
+        missing_player_b=player_m_b
     )
     
     delta_a = round(scenario["team_a_probability"] - baseline["team_a_probability"], 1)
     delta_b = round(scenario["team_b_probability"] - baseline["team_b_probability"], 1)
+    rel_change = round((delta_a / baseline["team_a_probability"]) * 100, 1) if baseline["team_a_probability"] > 0 else 0.0
+
+    changed_factors = []
+    if player_m_a and player_m_a != "None":
+        changed_factors.append(f"Key Player Missing: {player_m_a} ({req.team_a})")
+    if player_m_b and player_m_b != "None":
+        changed_factors.append(f"Key Player Missing: {player_m_b} ({req.team_b})")
+    if venue != req.venue:
+        changed_factors.append(f"Venue Shift: {venue}")
+    if pitch != "Balanced":
+        changed_factors.append(f"Pitch Condition: {pitch}")
+    if toss_w:
+        changed_factors.append(f"Toss: {toss_w} won toss & elected to {toss_d.lower()}")
+
+    if not changed_factors:
+        explanation = f"All scenario inputs are identical to the baseline match state. {req.team_a}'s predicted win probability remains unchanged at {baseline['team_a_probability']}% (0.0 percentage point change)."
+    else:
+        dir_text = "increased" if delta_a > 0 else "decreased" if delta_a < 0 else "remained unchanged"
+        abs_delta = abs(delta_a)
+        explanation = f"{req.team_a}'s predicted win probability {dir_text} from {baseline['team_a_probability']}% to {scenario['team_a_probability']}%, a change of {delta_a:+} percentage points ({rel_change:+} % relative change). "
+        if baseline["predicted_winner"] != scenario["predicted_winner"]:
+            explanation += f"The counterfactual conditions flipped the predicted winner from {baseline['predicted_winner']} to {scenario['predicted_winner']}. "
+        explanation += f"Key modifier drivers: {'; '.join(changed_factors)}."
     
     return {
         "baseline": baseline,
         "scenario": scenario,
         "change": {
+            "target_team": req.team_a,
             "team_a_probability_delta": delta_a,
             "team_b_probability_delta": delta_b,
-            "explanation": f"Modifying scenario parameters shifted {req.team_a}'s probability by {delta_a:+} percentage points."
+            "absolute_delta_percentage_points": delta_a,
+            "relative_change_pct": rel_change,
+            "winner_flipped": baseline["predicted_winner"] != scenario["predicted_winner"],
+            "changed_factors": changedFactors if (changedFactors := changed_factors) else [],
+            "explanation": explanation
         }
     }
 

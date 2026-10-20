@@ -1,6 +1,6 @@
-import { PLAYERS_DATABASE } from '../data/playersData';
-import { MATCHUPS_DATABASE } from '../data/matchupsData';
-import { runClientMonteCarloSimulation } from '../utils/tournamentSimulator';
+import { PLAYERS_DATABASE } from '../data/playersData.js';
+import { MATCHUPS_DATABASE } from '../data/matchupsData.js';
+import { runClientMonteCarloSimulation } from '../utils/tournamentSimulator.js';
 
 const API_BASE_URL = 'http://localhost:8000/api';
 
@@ -245,10 +245,48 @@ export async function postMatchPrediction(predictPayload) {
     const teamB = predictPayload.team_b;
     const venue = predictPayload.venue || "The Wanderers Stadium";
     const tossWinner = predictPayload.toss_winner || "";
+    const tossDecision = predictPayload.toss_decision || "Bat";
     const pitchProfile = predictPayload.pitch_profile || "Balanced";
+    const missingA = predictPayload.missing_player_a || "None";
+    const missingB = predictPayload.missing_player_b || "None";
 
-    const rA = MODEL_TEAM_STATS[teamA] || { rating: 90, win_pct: 50.0, batting: 75.0, bowling: 75.0, form: 75.0, impact: 75.0, pace_rating: 75.0, spin_rating: 75.0 };
-    const rB = MODEL_TEAM_STATS[teamB] || { rating: 90, win_pct: 50.0, batting: 75.0, bowling: 75.0, form: 75.0, impact: 75.0, pace_rating: 75.0, spin_rating: 75.0 };
+    const baseRA = MODEL_TEAM_STATS[teamA] || { rating: 90, win_pct: 50.0, batting: 75.0, bowling: 75.0, form: 75.0, impact: 75.0, pace_rating: 75.0, spin_rating: 75.0 };
+    const baseRB = MODEL_TEAM_STATS[teamB] || { rating: 90, win_pct: 50.0, batting: 75.0, bowling: 75.0, form: 75.0, impact: 75.0, pace_rating: 75.0, spin_rating: 75.0 };
+
+    const rA = { ...baseRA };
+    const rB = { ...baseRB };
+
+    // Missing player adjustments for Team A
+    if (missingA && missingA !== "None") {
+      const pA = PLAYERS_DATABASE.find(p => p.player_name === missingA);
+      const role = pA?.role || "Batter";
+      rA.impact = Math.max(50.0, rA.impact - 9.0);
+      if (role === "Batter" || role === "Wicket-Keeper" || role === "Wicketkeeper") {
+        rA.batting = Math.max(50.0, rA.batting - 4.0);
+      } else if (role === "Bowler") {
+        rA.bowling = Math.max(50.0, rA.bowling - 4.0);
+      } else if (role === "All-Rounder" || role === "All-rounder") {
+        rA.batting = Math.max(50.0, rA.batting - 2.5);
+        rA.bowling = Math.max(50.0, rA.bowling - 2.5);
+        rA.impact = Math.max(50.0, rA.impact - 2.0);
+      }
+    }
+
+    // Missing player adjustments for Team B
+    if (missingB && missingB !== "None") {
+      const pB = PLAYERS_DATABASE.find(p => p.player_name === missingB);
+      const role = pB?.role || "Batter";
+      rB.impact = Math.max(50.0, rB.impact - 9.0);
+      if (role === "Batter" || role === "Wicket-Keeper" || role === "Wicketkeeper") {
+        rB.batting = Math.max(50.0, rB.batting - 4.0);
+      } else if (role === "Bowler") {
+        rB.bowling = Math.max(50.0, rB.bowling - 4.0);
+      } else if (role === "All-Rounder" || role === "All-rounder") {
+        rB.batting = Math.max(50.0, rB.batting - 2.5);
+        rB.bowling = Math.max(50.0, rB.bowling - 2.5);
+        rB.impact = Math.max(50.0, rB.impact - 2.0);
+      }
+    }
 
     const venueA = getVenueSuitability(teamA, venue);
     const venueB = getVenueSuitability(teamB, venue);
@@ -264,9 +302,9 @@ export async function postMatchPrediction(predictPayload) {
 
     let tossAdv = 0.0;
     if (tossWinner === teamA) {
-      tossAdv = 1.2;
+      tossAdv = tossDecision === "Bat" ? 1.2 : 0.8;
     } else if (tossWinner === teamB) {
-      tossAdv = -1.2;
+      tossAdv = tossDecision === "Bat" ? -1.2 : -0.8;
     }
 
     const formDiff = rA.form - rB.form;
@@ -426,13 +464,90 @@ export async function postScenarioSimulate(simulatePayload) {
     if (!response.ok) throw new Error("API error");
     return await response.json();
   } catch (error) {
+    const teamA = simulatePayload.team_a;
+    const teamB = simulatePayload.team_b;
+    const venue = simulatePayload.venue || "The Wanderers Stadium";
+    const mods = simulatePayload.modified_features || {};
+
+    const modVenue = mods.venue || venue;
+    const modPitch = mods.pitch_profile || "Balanced";
+    const modTossWinner = mods.toss_winner || "";
+    const modTossDecision = mods.toss_decision || "Bat";
+    const modMissingA = mods.player_missing_a || "None";
+    const modMissingB = mods.player_missing_b || "None";
+
+    // 1. Calculate Baseline Match State (standard pitch, neutral toss, full squads)
+    const baseline = await postMatchPrediction({
+      team_a: teamA,
+      team_b: teamB,
+      venue: venue,
+      pitch_profile: "Balanced",
+      toss_winner: "",
+      toss_decision: "Bat",
+      missing_player_a: "None",
+      missing_player_b: "None"
+    });
+
+    // 2. Calculate Modified Scenario State (with user's counterfactual modifiers)
+    const scenario = await postMatchPrediction({
+      team_a: teamA,
+      team_b: teamB,
+      venue: modVenue,
+      pitch_profile: modPitch,
+      toss_winner: modTossWinner,
+      toss_decision: modTossDecision,
+      missing_player_a: modMissingA,
+      missing_player_b: modMissingB
+    });
+
+    const deltaA = Math.round((scenario.team_a_probability - baseline.team_a_probability) * 10) / 10;
+    const deltaB = Math.round((scenario.team_b_probability - baseline.team_b_probability) * 10) / 10;
+    const relativeChange = baseline.team_a_probability > 0
+      ? Math.round(((scenario.team_a_probability - baseline.team_a_probability) / baseline.team_a_probability) * 1000) / 10
+      : 0.0;
+
+    const changedFactors = [];
+    if (modMissingA && modMissingA !== "None") {
+      changedFactors.push(`Key Player Missing: ${modMissingA} (${teamA})`);
+    }
+    if (modMissingB && modMissingB !== "None") {
+      changedFactors.push(`Key Player Missing: ${modMissingB} (${teamB})`);
+    }
+    if (modVenue !== venue) {
+      changedFactors.push(`Venue Shift: ${modVenue}`);
+    }
+    if (modPitch !== "Balanced") {
+      changedFactors.push(`Pitch Condition: ${modPitch}`);
+    }
+    if (modTossWinner) {
+      changedFactors.push(`Toss: ${modTossWinner} won toss & elected to ${modTossDecision.toLowerCase()}`);
+    }
+
+    let explanation = "";
+    if (changedFactors.length === 0) {
+      explanation = `All scenario inputs are identical to the baseline match state. ${teamA}'s predicted win probability remains unchanged at ${baseline.team_a_probability}% (0.0 percentage point change).`;
+    } else {
+      const dirText = deltaA > 0 ? "increased" : deltaA < 0 ? "decreased" : "remained unchanged";
+      const absDelta = Math.abs(deltaA);
+      explanation = `${teamA}'s predicted win probability ${dirText} from ${baseline.team_a_probability}% to ${scenario.team_a_probability}%, a change of ${deltaA >= 0 ? "+" : ""}${deltaA} percentage points (${relativeChange >= 0 ? "+" : ""}${relativeChange}% relative change). `;
+      if (baseline.predicted_winner !== scenario.predicted_winner) {
+        explanation += `The counterfactual conditions flipped the predicted winner from ${baseline.predicted_winner} to ${scenario.predicted_winner}. `;
+      }
+      explanation += `Key modifier drivers: ${changedFactors.join("; ")}.`;
+    }
+
     return {
-      baseline: { team_a_probability: 63.8, team_b_probability: 36.2, predicted_winner: simulatePayload.team_a },
-      scenario: { team_a_probability: 54.2, team_b_probability: 45.8, predicted_winner: simulatePayload.team_a },
+      baseline,
+      scenario,
       change: {
-        team_a_probability_delta: -9.6,
-        team_b_probability_delta: 9.6,
-        explanation: `Modifying key player availability reduced ${simulatePayload.team_a}'s probability by 9.6 percentage points.`
+        target_team: teamA,
+        team_a_probability_delta: deltaA,
+        team_b_probability_delta: deltaB,
+        absolute_delta_percentage_points: deltaA,
+        relative_change_pct: relativeChange,
+        winner_flipped: baseline.predicted_winner !== scenario.predicted_winner,
+        changed_factors: changedFactors,
+        explanation
       }
     };
   }
