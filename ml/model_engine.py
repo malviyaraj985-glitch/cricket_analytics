@@ -542,46 +542,131 @@ def get_shap_explanation(
         "natural_explanation": explanation_text
     }
 
-def run_monte_carlo_tournament_simulation(iterations: int = 1000) -> List[Dict[str, Any]]:
-    """Runs Monte Carlo World Cup 2027 simulation across N iterations."""
+def get_tournament_match_probability(team_a: str, team_b: str) -> float:
+    """Calculates symmetric match win probability for Team A vs Team B in African conditions."""
+    s_a = TEAM_STATS.get(team_a, {"rating": 90, "form": 75, "batting": 75, "bowling": 75, "african_host": 70, "impact": 75})
+    s_b = TEAM_STATS.get(team_b, {"rating": 90, "form": 75, "batting": 75, "bowling": 75, "african_host": 70, "impact": 75})
+
+    rating_diff = s_a["rating"] - s_b["rating"]
+    form_diff = s_a["form"] - s_b["form"]
+    batting_diff = s_a["batting"] - s_b["batting"]
+    bowling_diff = s_a["bowling"] - s_b["bowling"]
+    host_diff = s_a["african_host"] - s_b["african_host"]
+    impact_diff = s_a["impact"] - s_b["impact"]
+
+    total_delta = (
+        0.35 * rating_diff +
+        0.25 * form_diff +
+        0.20 * batting_diff +
+        0.20 * bowling_diff +
+        0.15 * host_diff +
+        0.10 * impact_diff
+    )
+
+    raw_prob = 1.0 / (1.0 + np.exp(-0.046 * total_delta))
+    return float(np.clip(raw_prob, 0.08, 0.92))
+
+def run_monte_carlo_tournament_simulation(iterations: int = 1000, seed: int = None) -> List[Dict[str, Any]]:
+    """
+    Authentic Monte Carlo Tournament Simulation Engine for ICC ODI World Cup 2027.
+    
+    Executes N complete tournament iterations:
+    - 10 ICC Teams
+    - 45 Round-robin group matches per iteration
+    - Points (2 for win, 0 for loss) + simulated Net Run Rate (NRR) for realistic tie-breaks
+    - Top 6 qualify for Super Six contention
+    - Top 4 advance to Semi-Finals (SF1: 1st vs 4th, SF2: 2nd vs 3rd)
+    - Winners advance to Grand Final
+    - Final match produces the World Champion
+    """
     teams = ["India", "Australia", "South Africa", "England", "New Zealand", "Pakistan", "Sri Lanka", "West Indies", "Afghanistan", "Bangladesh"]
-    
-    team_base_ratings = {
-        "India": 0.24, "Australia": 0.22, "South Africa": 0.16, "England": 0.11,
-        "New Zealand": 0.09, "Pakistan": 0.06, "Sri Lanka": 0.04, "West Indies": 0.04,
-        "Afghanistan": 0.02, "Bangladesh": 0.02
-    }
-    
+    n_teams = len(teams)
+    n_iter = min(max(int(iterations), 100), 5000)
+
+    if seed is not None:
+        np.random.seed(seed)
+
+    # Precompute pairwise match win probabilities
+    pairwise_probs = {}
+    for i in range(n_teams):
+        for j in range(n_teams):
+            if i != j:
+                t_a, t_b = teams[i], teams[j]
+                pairwise_probs[(t_a, t_b)] = get_tournament_match_probability(t_a, t_b)
+
     quals = {t: 0 for t in teams}
     semis = {t: 0 for t in teams}
     finals = {t: 0 for t in teams}
     champs = {t: 0 for t in teams}
-    
-    np.random.seed(42)
-    
-    for _ in range(iterations):
-        team_scores = {t: team_base_ratings[t] * np.random.normal(1.0, 0.18) for t in teams}
-        sorted_teams = sorted(teams, key=lambda t: team_scores[t], reverse=True)
-        
-        for t in sorted_teams[:6]:
+
+    for _ in range(n_iter):
+        points = {t: 0 for t in teams}
+        nrr = {t: 0.0 for t in teams}
+
+        # 1. Group Stage: Complete 45 round-robin matches
+        for i in range(n_teams):
+            for j in range(i + 1, n_teams):
+                team_a = teams[i]
+                team_b = teams[j]
+                prob_a = pairwise_probs[(team_a, team_b)]
+
+                a_won = np.random.rand() < prob_a
+                run_margin = max(1.0, abs(np.random.normal((prob_a - 0.5) * 60, 28)))
+                nrr_delta = run_margin / 50.0
+
+                if a_won:
+                    points[team_a] += 2
+                    nrr[team_a] += nrr_delta
+                    nrr[team_b] -= nrr_delta
+                else:
+                    points[team_b] += 2
+                    nrr[team_b] += nrr_delta
+                    nrr[team_a] -= nrr_delta
+
+        # 2. Standings sorted by Points, then NRR
+        ranked = sorted(teams, key=lambda t: (points[t], nrr[t]), reverse=True)
+
+        # 3. Advancement
+        # Top 6 Super Six Qualifiers
+        for t in ranked[:6]:
             quals[t] += 1
-        for t in sorted_teams[:4]:
+
+        # Top 4 Knockout Semi-Finalists
+        for t in ranked[:4]:
             semis[t] += 1
-        for t in sorted_teams[:2]:
-            finals[t] += 1
-        champs[sorted_teams[0]] += 1
-        
+
+        # 4. Knockout Semi-Finals
+        # SF1: 1st vs 4th
+        sf1_prob = pairwise_probs[(ranked[0], ranked[3])]
+        finalist_1 = ranked[0] if np.random.rand() < sf1_prob else ranked[3]
+
+        # SF2: 2nd vs 3rd
+        sf2_prob = pairwise_probs[(ranked[1], ranked[2])]
+        finalist_2 = ranked[1] if np.random.rand() < sf2_prob else ranked[2]
+
+        finals[finalist_1] += 1
+        finals[finalist_2] += 1
+
+        # 5. Grand Final
+        final_prob = pairwise_probs[(finalist_1, finalist_2)]
+        champion = finalist_1 if np.random.rand() < final_prob else finalist_2
+        champs[champion] += 1
+
     results = []
     for t in teams:
         results.append({
             "team": t,
-            "qualification_pct": round((quals[t] / iterations) * 100, 1),
-            "semi_final_pct": round((semis[t] / iterations) * 100, 1),
-            "final_pct": round((finals[t] / iterations) * 100, 1),
-            "champion_pct": round((champs[t] / iterations) * 100, 1)
+            "qualification_pct": round((quals[t] / n_iter) * 100, 1),
+            "semi_final_pct": round((semis[t] / n_iter) * 100, 1),
+            "final_pct": round((finals[t] / n_iter) * 100, 1),
+            "champion_pct": round((champs[t] / n_iter) * 100, 1),
+            "raw_champions": champs[t],
+            "raw_finals": finals[t],
+            "raw_semis": semis[t],
+            "raw_quals": quals[t]
         })
-        
-    return sorted(results, key=lambda x: x["champion_pct"], reverse=True)
+
+    return sorted(results, key=lambda x: (x["champion_pct"], x["final_pct"], x["semi_final_pct"]), reverse=True)
 
 if __name__ == "__main__":
     train_and_eval_all_models()

@@ -194,13 +194,20 @@ def simulate_scenario(req: SimulateRequest):
 
 @app.post("/api/tournament-simulation")
 def tournament_simulation(req: TournamentSimRequest):
+    import time
+    t0 = time.time()
     n_iter = min(max(req.iterations, 100), 5000)
     results = run_monte_carlo_tournament_simulation(iterations=n_iter)
+    duration_ms = round((time.time() - t0) * 1000)
     return {
         "tournament": "ODI World Cup 2027 (South Africa, Zimbabwe & Namibia)",
         "iterations": n_iter,
         "simulated_probabilities": results,
-        "note": "Simulation results depend on model assumptions, Monte Carlo sampling and historical pre-match feature vectors."
+        "execution_time_ms": duration_ms,
+        "simulation_timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "run_id": f"mc_{int(time.time())}_{n_iter}",
+        "tournament_format": "10-Team Complete Round-Robin (45 fixtures) + Super Six Qualification + Semi-Finals & Final",
+        "tournament_assumption": "Simulated using the 10-team round-robin + Super Six benchmark structure with South African/African pitch conditions. Official 14-team 2027 qualification schedule remains unfinalized by ICC."
     }
 
 @app.get("/api/matchups")

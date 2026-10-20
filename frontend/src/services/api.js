@@ -1,5 +1,6 @@
 import { PLAYERS_DATABASE } from '../data/playersData';
 import { MATCHUPS_DATABASE } from '../data/matchupsData';
+import { runClientMonteCarloSimulation } from '../utils/tournamentSimulator';
 
 const API_BASE_URL = 'http://localhost:8000/api';
 
@@ -447,17 +448,8 @@ export async function postTournamentSim(iterations = 1000) {
     if (!response.ok) throw new Error("API error");
     return await response.json();
   } catch (error) {
-    return {
-      iterations,
-      simulated_probabilities: [
-        { team: "India", qualification_pct: 98.2, semi_final_pct: 85.4, final_pct: 48.0, champion_pct: 26.5 },
-        { team: "Australia", qualification_pct: 96.5, semi_final_pct: 82.1, final_pct: 44.5, champion_pct: 24.2 },
-        { team: "South Africa", qualification_pct: 91.0, semi_final_pct: 70.0, final_pct: 32.0, champion_pct: 16.8 },
-        { team: "England", qualification_pct: 84.0, semi_final_pct: 55.0, final_pct: 22.0, champion_pct: 11.2 },
-        { team: "New Zealand", qualification_pct: 82.5, semi_final_pct: 52.0, final_pct: 19.5, champion_pct: 9.5 },
-        { team: "Pakistan", qualification_pct: 71.0, semi_final_pct: 38.0, final_pct: 12.0, champion_pct: 5.4 }
-      ]
-    };
+    // Execute authentic client-side Monte Carlo tournament simulation when backend is unreachable (e.g. Netlify static hosting)
+    return runClientMonteCarloSimulation(iterations);
   }
 }
 
