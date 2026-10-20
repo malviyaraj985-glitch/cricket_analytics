@@ -2,64 +2,65 @@
   "selected_model": "Logistic Regression",
   "model_version": "v2.5-prod",
   "dataset_version": "v1.0-cricsheet",
+  "symmetric_design": true,
   "time_aware_splits": {
     "training": "1983\u20132015 (n=380 matches)",
     "validation": "2016\u20132019 (n=60 matches)",
     "testing": "2020\u20132024 (n=60 matches)"
   },
   "all_model_metrics": {
-    "Random Forest": {
-      "model_name": "Random Forest",
-      "accuracy": 0.6735,
-      "precision": 0.6522,
-      "recall": 0.6522,
-      "f1_score": 0.6522,
-      "roc_auc": 0.7542,
-      "log_loss": 0.5782,
-      "brier_score": 0.1971,
-      "calibration_score": 0.07,
+    "Logistic Regression": {
+      "model_name": "Logistic Regression",
+      "accuracy": 0.7333,
+      "precision": 0.7333,
+      "recall": 0.7333,
+      "f1_score": 0.7333,
+      "roc_auc": 0.7333,
+      "log_loss": 0.6208,
+      "brier_score": 0.2146,
+      "calibration_score": 0.1335,
       "train_period": "1983\u20132015",
       "validation_period": "2016\u20132019",
       "test_period": "2020\u20132024"
     },
     "Gradient Boosting": {
       "model_name": "Gradient Boosting",
-      "accuracy": 0.6939,
-      "precision": 0.6538,
-      "recall": 0.7391,
-      "f1_score": 0.6939,
-      "roc_auc": 0.7642,
-      "log_loss": 0.6522,
-      "brier_score": 0.2142,
-      "calibration_score": 0.1527,
+      "accuracy": 0.7333,
+      "precision": 0.7333,
+      "recall": 0.7333,
+      "f1_score": 0.7333,
+      "roc_auc": 0.7311,
+      "log_loss": 0.6057,
+      "brier_score": 0.2086,
+      "calibration_score": 0.0658,
       "train_period": "1983\u20132015",
       "validation_period": "2016\u20132019",
       "test_period": "2020\u20132024"
     },
-    "Logistic Regression": {
-      "model_name": "Logistic Regression",
-      "accuracy": 0.7347,
-      "precision": 0.7083,
-      "recall": 0.7391,
-      "f1_score": 0.7234,
-      "roc_auc": 0.8227,
-      "log_loss": 0.5308,
-      "brier_score": 0.1779,
-      "calibration_score": 0.0664,
+    "Random Forest": {
+      "model_name": "Random Forest",
+      "accuracy": 0.6667,
+      "precision": 0.6786,
+      "recall": 0.6333,
+      "f1_score": 0.6552,
+      "roc_auc": 0.7344,
+      "log_loss": 0.6207,
+      "brier_score": 0.2148,
+      "calibration_score": 0.0718,
       "train_period": "1983\u20132015",
       "validation_period": "2016\u20132019",
       "test_period": "2020\u20132024"
     },
     "Neural Network": {
       "model_name": "Neural Network",
-      "accuracy": 0.6939,
-      "precision": 0.6538,
-      "recall": 0.7391,
-      "f1_score": 0.6939,
-      "roc_auc": 0.8227,
-      "log_loss": 0.5664,
-      "brier_score": 0.1898,
-      "calibration_score": 0.213,
+      "accuracy": 0.7167,
+      "precision": 0.697,
+      "recall": 0.7667,
+      "f1_score": 0.7302,
+      "roc_auc": 0.7656,
+      "log_loss": 0.5924,
+      "brier_score": 0.1975,
+      "calibration_score": 0.1061,
       "train_period": "1983\u20132015",
       "validation_period": "2016\u20132019",
       "test_period": "2020\u20132024"
@@ -67,26 +68,26 @@
   },
   "best_metrics": {
     "model_name": "Logistic Regression",
-    "accuracy": 0.7347,
-    "precision": 0.7083,
-    "recall": 0.7391,
-    "f1_score": 0.7234,
-    "roc_auc": 0.8227,
-    "log_loss": 0.5308,
-    "brier_score": 0.1779,
-    "calibration_score": 0.0664,
+    "accuracy": 0.7333,
+    "precision": 0.7333,
+    "recall": 0.7333,
+    "f1_score": 0.7333,
+    "roc_auc": 0.7333,
+    "log_loss": 0.6208,
+    "brier_score": 0.2146,
+    "calibration_score": 0.1335,
     "train_period": "1983\u20132015",
     "validation_period": "2016\u20132019",
     "test_period": "2020\u20132024"
   },
   "confusion_matrix": [
     [
-      19,
-      7
+      22,
+      8
     ],
     [
-      6,
-      17
+      8,
+      22
     ]
   ],
   "roc_curve": [
@@ -96,98 +97,70 @@
     },
     {
       "fpr": 0.0,
-      "tpr": 0.0435
+      "tpr": 0.0333
     },
     {
-      "fpr": 0.0,
-      "tpr": 0.4348
+      "fpr": 0.0333,
+      "tpr": 0.0333
     },
     {
-      "fpr": 0.0385,
-      "tpr": 0.4348
+      "fpr": 0.0333,
+      "tpr": 0.2
     },
     {
-      "fpr": 0.0385,
-      "tpr": 0.4783
+      "fpr": 0.0667,
+      "tpr": 0.2
     },
     {
-      "fpr": 0.0769,
-      "tpr": 0.4783
+      "fpr": 0.0667,
+      "tpr": 0.3667
     },
     {
-      "fpr": 0.0769,
-      "tpr": 0.5217
+      "fpr": 0.1,
+      "tpr": 0.3667
     },
     {
-      "fpr": 0.1154,
-      "tpr": 0.5217
+      "fpr": 0.1,
+      "tpr": 0.4667
     },
     {
-      "fpr": 0.1154,
-      "tpr": 0.6522
+      "fpr": 0.2667,
+      "tpr": 0.4667
     },
     {
-      "fpr": 0.1538,
-      "tpr": 0.6522
+      "fpr": 0.2667,
+      "tpr": 0.7333
     },
     {
-      "fpr": 0.1538,
-      "tpr": 0.6957
+      "fpr": 0.5333,
+      "tpr": 0.7333
     },
     {
-      "fpr": 0.2308,
-      "tpr": 0.6957
+      "fpr": 0.5333,
+      "tpr": 0.9
     },
     {
-      "fpr": 0.2308,
-      "tpr": 0.7391
+      "fpr": 0.6333,
+      "tpr": 0.9
     },
     {
-      "fpr": 0.3077,
-      "tpr": 0.7391
+      "fpr": 0.6333,
+      "tpr": 0.9333
     },
     {
-      "fpr": 0.3077,
-      "tpr": 0.7826
+      "fpr": 0.8,
+      "tpr": 0.9333
     },
     {
-      "fpr": 0.3462,
-      "tpr": 0.7826
+      "fpr": 0.8,
+      "tpr": 0.9667
     },
     {
-      "fpr": 0.3462,
-      "tpr": 0.8261
+      "fpr": 0.9667,
+      "tpr": 0.9667
     },
     {
-      "fpr": 0.4615,
-      "tpr": 0.8261
-    },
-    {
-      "fpr": 0.4615,
-      "tpr": 0.8696
-    },
-    {
-      "fpr": 0.5,
-      "tpr": 0.8696
-    },
-    {
-      "fpr": 0.5,
-      "tpr": 0.913
-    },
-    {
-      "fpr": 0.7692,
-      "tpr": 0.913
-    },
-    {
-      "fpr": 0.7692,
-      "tpr": 0.9565
-    },
-    {
-      "fpr": 0.8462,
-      "tpr": 0.9565
-    },
-    {
-      "fpr": 0.8462,
+      "fpr": 0.9667,
       "tpr": 1.0
     },
     {
@@ -197,218 +170,28 @@
   ],
   "calibration_curve": [
     {
-      "predicted": 0.0667,
+      "predicted": 0.1537,
+      "observed": 0.0
+    },
+    {
+      "predicted": 0.2723,
       "observed": 0.2222
     },
     {
-      "predicted": 0.1905,
-      "observed": 0.1429
+      "predicted": 0.4273,
+      "observed": 0.3
     },
     {
-      "predicted": 0.3239,
-      "observed": 0.2
+      "predicted": 0.5727,
+      "observed": 0.7
     },
     {
-      "predicted": 0.4205,
-      "observed": 0.5
+      "predicted": 0.7277,
+      "observed": 0.7778
     },
     {
-      "predicted": 0.5685,
-      "observed": 0.25
-    },
-    {
-      "predicted": 0.6798,
-      "observed": 0.8
-    },
-    {
-      "predicted": 0.8379,
-      "observed": 0.4
-    },
-    {
-      "predicted": 0.9338,
+      "predicted": 0.8463,
       "observed": 1.0
-    }
-  ],
-  "backtesting": [
-    {
-      "tournament": "2015 World Cup",
-      "year": 2015,
-      "host": "Australia & New Zealand",
-      "matches_count": 49,
-      "actual_winner": "Australia",
-      "runner_up": "New Zealand",
-      "predictions": [
-        {
-          "match": "Australia vs New Zealand (Final)",
-          "team_a": "Australia",
-          "team_b": "New Zealand",
-          "prob_a": 64.2,
-          "prob_b": 35.8,
-          "predicted": "Australia",
-          "actual": "Australia",
-          "correct": true
-        },
-        {
-          "match": "India vs Australia (Semi)",
-          "team_a": "India",
-          "team_b": "Australia",
-          "prob_a": 46.5,
-          "prob_b": 53.5,
-          "predicted": "Australia",
-          "actual": "Australia",
-          "correct": true
-        },
-        {
-          "match": "South Africa vs New Zealand (Semi)",
-          "team_a": "South Africa",
-          "team_b": "New Zealand",
-          "prob_a": 52.0,
-          "prob_b": 48.0,
-          "predicted": "South Africa",
-          "actual": "New Zealand",
-          "correct": false
-        },
-        {
-          "match": "Australia vs Pakistan (QF)",
-          "team_a": "Australia",
-          "team_b": "Pakistan",
-          "prob_a": 71.0,
-          "prob_b": 29.0,
-          "predicted": "Australia",
-          "actual": "Australia",
-          "correct": true
-        },
-        {
-          "match": "India vs Bangladesh (QF)",
-          "team_a": "India",
-          "team_b": "Bangladesh",
-          "prob_a": 78.5,
-          "prob_b": 21.5,
-          "predicted": "India",
-          "actual": "India",
-          "correct": true
-        }
-      ]
-    },
-    {
-      "tournament": "2019 World Cup",
-      "year": 2019,
-      "host": "England & Wales",
-      "matches_count": 48,
-      "actual_winner": "England",
-      "runner_up": "New Zealand",
-      "predictions": [
-        {
-          "match": "England vs New Zealand (Final)",
-          "team_a": "England",
-          "team_b": "New Zealand",
-          "prob_a": 58.4,
-          "prob_b": 41.6,
-          "predicted": "England",
-          "actual": "England",
-          "correct": true
-        },
-        {
-          "match": "India vs New Zealand (Semi)",
-          "team_a": "India",
-          "team_b": "New Zealand",
-          "prob_a": 66.8,
-          "prob_b": 33.2,
-          "predicted": "India",
-          "actual": "New Zealand",
-          "correct": false
-        },
-        {
-          "match": "Australia vs England (Semi)",
-          "team_a": "Australia",
-          "team_b": "England",
-          "prob_a": 48.2,
-          "prob_b": 51.8,
-          "predicted": "England",
-          "actual": "England",
-          "correct": true
-        },
-        {
-          "match": "India vs Pakistan",
-          "team_a": "India",
-          "team_b": "Pakistan",
-          "prob_a": 72.4,
-          "prob_b": 27.6,
-          "predicted": "India",
-          "actual": "India",
-          "correct": true
-        },
-        {
-          "match": "England vs Australia (Group)",
-          "team_a": "England",
-          "team_b": "Australia",
-          "prob_a": 54.0,
-          "prob_b": 46.0,
-          "predicted": "England",
-          "actual": "Australia",
-          "correct": false
-        }
-      ]
-    },
-    {
-      "tournament": "2023 World Cup",
-      "year": 2023,
-      "host": "India",
-      "matches_count": 48,
-      "actual_winner": "Australia",
-      "runner_up": "India",
-      "predictions": [
-        {
-          "match": "India vs Australia (Final)",
-          "team_a": "India",
-          "team_b": "Australia",
-          "prob_a": 63.8,
-          "prob_b": 36.2,
-          "predicted": "India",
-          "actual": "Australia",
-          "correct": false
-        },
-        {
-          "match": "India vs New Zealand (Semi)",
-          "team_a": "India",
-          "team_b": "New Zealand",
-          "prob_a": 68.5,
-          "prob_b": 31.5,
-          "predicted": "India",
-          "actual": "India",
-          "correct": true
-        },
-        {
-          "match": "South Africa vs Australia (Semi)",
-          "team_a": "South Africa",
-          "team_b": "Australia",
-          "prob_a": 49.0,
-          "prob_b": 51.0,
-          "predicted": "Australia",
-          "actual": "Australia",
-          "correct": true
-        },
-        {
-          "match": "India vs South Africa",
-          "team_a": "India",
-          "team_b": "South Africa",
-          "prob_a": 61.2,
-          "prob_b": 38.8,
-          "predicted": "India",
-          "actual": "India",
-          "correct": true
-        },
-        {
-          "match": "Australia vs Pakistan",
-          "team_a": "Australia",
-          "team_b": "Pakistan",
-          "prob_a": 65.0,
-          "prob_b": 35.0,
-          "predicted": "Australia",
-          "actual": "Australia",
-          "correct": true
-        }
-      ]
     }
   ]
 }

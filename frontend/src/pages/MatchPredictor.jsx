@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { postMatchPrediction } from '../services/api';
 import { Target, Cpu, CheckCircle, ArrowRight, AlertTriangle } from 'lucide-react';
 
@@ -10,8 +10,6 @@ export default function MatchPredictor({ onNavigate }) {
   const [tossDecision, setTossDecision] = useState("Bat");
   const [pitchProfile, setPitchProfile] = useState("Balanced");
   const [weather, setWeather] = useState("Clear");
-  const [playerMissingA, setPlayerMissingA] = useState("None");
-  const [playerMissingB, setPlayerMissingB] = useState("None");
 
   const [loading, setLoading] = useState(false);
   const [prediction, setPrediction] = useState(null);
@@ -19,20 +17,17 @@ export default function MatchPredictor({ onNavigate }) {
   const teamsList = ["India", "Australia", "South Africa", "England", "New Zealand", "Pakistan", "Sri Lanka", "West Indies", "Afghanistan", "Bangladesh"];
   const venuesList = ["The Wanderers Stadium", "SuperSport Park", "Kingsmead Cricket Ground", "Narendra Modi Stadium", "Melbourne Cricket Ground", "Lord's Cricket Ground"];
 
-  const handlePredict = async (e) => {
-    e.preventDefault();
+  const runPrediction = async (params) => {
     setLoading(true);
     try {
       const res = await postMatchPrediction({
-        team_a: teamA,
-        team_b: teamB,
-        venue: venue,
-        toss_winner: tossWinner,
-        toss_decision: tossDecision,
-        pitch_profile: pitchProfile,
-        weather: weather,
-        player_missing_a: playerMissingA,
-        player_missing_b: playerMissingB
+        team_a: params.teamA,
+        team_b: params.teamB,
+        venue: params.venue,
+        toss_winner: params.tossWinner,
+        toss_decision: params.tossDecision,
+        pitch_profile: params.pitchProfile,
+        weather: params.weather
       });
       setPrediction(res);
     } catch (err) {
@@ -40,6 +35,15 @@ export default function MatchPredictor({ onNavigate }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    runPrediction({ teamA, teamB, venue, tossWinner, tossDecision, pitchProfile, weather });
+  }, []);
+
+  const handlePredict = async (e) => {
+    e.preventDefault();
+    runPrediction({ teamA, teamB, venue, tossWinner, tossDecision, pitchProfile, weather });
   };
 
   return (
@@ -62,26 +66,36 @@ export default function MatchPredictor({ onNavigate }) {
         <form onSubmit={handlePredict} className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4 lg:col-span-1">
           <h2 className="text-base font-extrabold text-white pb-2 border-b border-slate-800">Match Parameters</h2>
           
-          <div>
-            <label className="text-xs font-bold text-slate-300 block mb-1">Team A</label>
-            <select 
-              value={teamA} 
-              onChange={(e) => setTeamA(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg p-2.5 text-xs font-semibold focus:border-emerald-500 outline-none"
-            >
-              {teamsList.map(t => <option key={t} value={t}>{t}</option>)}
-            </select>
-          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs font-bold text-slate-300 block mb-1">Team A</label>
+              <select 
+                value={teamA} 
+                onChange={(e) => {
+                  const newA = e.target.value;
+                  setTeamA(newA);
+                  if (tossWinner !== newA && tossWinner !== teamB) setTossWinner(newA);
+                }}
+                className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg p-2.5 text-xs font-semibold focus:border-emerald-500 outline-none"
+              >
+                {teamsList.map(t => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </div>
 
-          <div>
-            <label className="text-xs font-bold text-slate-300 block mb-1">Team B</label>
-            <select 
-              value={teamB} 
-              onChange={(e) => setTeamB(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg p-2.5 text-xs font-semibold focus:border-emerald-500 outline-none"
-            >
-              {teamsList.filter(t => t !== teamA).map(t => <option key={t} value={t}>{t}</option>)}
-            </select>
+            <div>
+              <label className="text-xs font-bold text-slate-300 block mb-1">Team B</label>
+              <select 
+                value={teamB} 
+                onChange={(e) => {
+                  const newB = e.target.value;
+                  setTeamB(newB);
+                  if (tossWinner !== teamA && tossWinner !== newB) setTossWinner(newB);
+                }}
+                className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg p-2.5 text-xs font-semibold focus:border-emerald-500 outline-none"
+              >
+                {teamsList.filter(t => t !== teamA).map(t => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </div>
           </div>
 
           <div>
@@ -101,7 +115,7 @@ export default function MatchPredictor({ onNavigate }) {
               <select 
                 value={tossWinner} 
                 onChange={(e) => setTossWinner(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg p-2 text-xs font-semibold"
+                className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg p-2 text-xs font-semibold focus:border-emerald-500 outline-none"
               >
                 <option value={teamA}>{teamA}</option>
                 <option value={teamB}>{teamB}</option>
@@ -112,7 +126,7 @@ export default function MatchPredictor({ onNavigate }) {
               <select 
                 value={tossDecision} 
                 onChange={(e) => setTossDecision(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg p-2 text-xs font-semibold"
+                className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg p-2 text-xs font-semibold focus:border-emerald-500 outline-none"
               >
                 <option value="Bat">Bat</option>
                 <option value="Field">Field</option>
@@ -126,7 +140,7 @@ export default function MatchPredictor({ onNavigate }) {
               <select 
                 value={pitchProfile} 
                 onChange={(e) => setPitchProfile(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg p-2 text-xs font-semibold"
+                className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg p-2 text-xs font-semibold focus:border-emerald-500 outline-none"
               >
                 <option value="Balanced">Balanced</option>
                 <option value="Batting-Friendly">Batting-Friendly</option>
@@ -139,35 +153,12 @@ export default function MatchPredictor({ onNavigate }) {
               <select 
                 value={weather} 
                 onChange={(e) => setWeather(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg p-2 text-xs font-semibold"
+                className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg p-2 text-xs font-semibold focus:border-emerald-500 outline-none"
               >
                 <option value="Clear">Clear / Sunny</option>
                 <option value="Overcast">Overcast</option>
                 <option value="Humid">Humid</option>
               </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs font-bold text-slate-300 block mb-1">Key Player Missing ({teamA})</label>
-              <input 
-                type="text" 
-                value={playerMissingA} 
-                onChange={(e) => setPlayerMissingA(e.target.value)}
-                placeholder="e.g. Jasprit Bumrah"
-                className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg p-2 text-xs font-semibold"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-bold text-slate-300 block mb-1">Key Player Missing ({teamB})</label>
-              <input 
-                type="text" 
-                value={playerMissingB} 
-                onChange={(e) => setPlayerMissingB(e.target.value)}
-                placeholder="e.g. Pat Cummins"
-                className="w-full bg-slate-950 border border-slate-800 text-white rounded-lg p-2 text-xs font-semibold"
-              />
             </div>
           </div>
 
@@ -200,7 +191,13 @@ export default function MatchPredictor({ onNavigate }) {
                 </div>
                 <div className="text-right">
                   <span className="text-[10px] text-slate-400 font-bold block">MODEL CONFIDENCE</span>
-                  <span className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-extrabold rounded-full inline-block mt-1">
+                  <span className={`px-3 py-1 border text-xs font-extrabold rounded-full inline-block mt-1 ${
+                    prediction.confidence === "High" 
+                      ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" 
+                      : prediction.confidence === "Medium"
+                      ? "bg-amber-500/10 border-amber-500/30 text-amber-400"
+                      : "bg-blue-500/10 border-blue-500/30 text-blue-400"
+                  }`}>
                     {prediction.confidence} Confidence
                   </span>
                 </div>

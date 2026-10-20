@@ -53,8 +53,6 @@ class PredictRequest(BaseModel):
     toss_decision: Optional[str] = "Bat"
     pitch_profile: Optional[str] = "Balanced"
     weather: Optional[str] = "Clear"
-    player_missing_a: Optional[str] = "None"
-    player_missing_b: Optional[str] = "None"
 
 class ExplainRequest(BaseModel):
     feature_dict: Dict[str, float]
@@ -140,9 +138,7 @@ def predict_match(req: PredictRequest):
         toss_winner=req.toss_winner or req.team_a,
         toss_decision=req.toss_decision or "Bat",
         pitch_profile=req.pitch_profile or "Balanced",
-        weather=req.weather or "Clear",
-        player_missing_a=req.player_missing_a or "None",
-        player_missing_b=req.player_missing_b or "None"
+        weather=req.weather or "Clear"
     )
 
 @app.post("/api/explain")
