@@ -1,4 +1,5 @@
 import { PLAYERS_DATABASE } from '../data/playersData';
+import { MATCHUPS_DATABASE } from '../data/matchupsData';
 
 const API_BASE_URL = 'http://localhost:8000/api';
 
@@ -159,14 +160,19 @@ export async function fetchMatchupsData(batter = "", bowler = "") {
     const url = `${API_BASE_URL}/matchups?batter=${encodeURIComponent(batter)}&bowler=${encodeURIComponent(bowler)}`;
     const response = await fetch(url);
     if (!response.ok) throw new Error("API error");
-    return await response.json();
+    const data = await response.json();
+    if (data && data.length > 0) return data;
+    throw new Error("No data returned from backend");
   } catch (error) {
-    return [
-      { matchup_id: 1, batter_name: "Rohit Sharma", bowler_name: "Mitchell Starc", batter_team_name: "India", bowler_team_name: "Australia", balls: 142, runs: 138, dismissals: 3, strike_rate: 97.18, dot_ball_percentage: 52.1, boundary_percentage: 14.8 },
-      { matchup_id: 2, batter_name: "Virat Kohli", bowler_name: "Mitchell Starc", batter_team_name: "India", bowler_team_name: "Australia", balls: 185, runs: 162, dismissals: 4, strike_rate: 87.57, dot_ball_percentage: 48.6, boundary_percentage: 11.4 },
-      { matchup_id: 3, batter_name: "Virat Kohli", bowler_name: "Pat Cummins", batter_team_name: "India", bowler_team_name: "Australia", balls: 150, runs: 125, dismissals: 2, strike_rate: 83.33, dot_ball_percentage: 50.0, boundary_percentage: 10.0 },
-      { matchup_id: 4, batter_name: "Travis Head", bowler_name: "Jasprit Bumrah", batter_team_name: "Australia", bowler_team_name: "India", balls: 95, runs: 82, dismissals: 2, strike_rate: 86.32, dot_ball_percentage: 55.8, boundary_percentage: 12.6 }
-    ];
+    let list = MATCHUPS_DATABASE;
+    if (batter || bowler) {
+      list = list.filter(m => {
+        const bMatch = !batter || m.batter_name.toLowerCase().includes(batter.toLowerCase());
+        const wMatch = !bowler || m.bowler_name.toLowerCase().includes(bowler.toLowerCase());
+        return bMatch && wMatch;
+      });
+    }
+    return list;
   }
 }
 
@@ -497,7 +503,7 @@ export async function fetchDataSources() {
         { name: "Cricsheet ODI Match Data", source_url: "https://cricsheet.org/", retrieved_at: "2026-10-03T20:00:00Z", data_version: "v1.0-cricsheet", data_status: "verified", record_count: 500 },
         { name: "Official ICC ODI Rankings", source_url: "https://www.icc-cricket.com/", retrieved_at: "2026-10-03T20:00:00Z", data_version: "v2024.1", data_status: "verified", record_count: 10 }
       ],
-      summary_counts: { teams: 10, players: 94, venues: 32, matches: 500, matchups: 8, features_engineered: 23 }
+      summary_counts: { teams: 10, players: 94, venues: 32, matches: 500, matchups: 50, features_engineered: 23 }
     };
   }
 }

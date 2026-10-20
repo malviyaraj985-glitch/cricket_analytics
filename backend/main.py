@@ -206,22 +206,35 @@ def tournament_simulation(req: TournamentSimRequest):
 @app.get("/api/matchups")
 def get_matchups(batter: Optional[str] = None, bowler: Optional[str] = None):
     rows = query_db("""
-        SELECT m.*, p1.player_name as batter_name, p2.player_name as bowler_name
+        SELECT m.*, 
+               p1.player_name as batter_name, p2.player_name as bowler_name,
+               t1.team_name as batter_team_name, t2.team_name as bowler_team_name,
+               p1.batting_style, p2.bowling_style
         FROM matchups m
         JOIN players p1 ON m.batter_id = p1.player_id
         JOIN players p2 ON m.bowler_id = p2.player_id
+        LEFT JOIN teams t1 ON m.batter_team = t1.team_id
+        LEFT JOIN teams t2 ON m.bowler_team = t2.team_id
+        ORDER BY m.matchup_id ASC
     """)
     if not rows and os.path.exists(os.path.join(DATA_DIR, "matchups.csv")):
-        rows = pd.read_csv(os.path.join(DATA_DIR, "matchups.csv")).to_dict(orient="records")
+        df = pd.read_csv(os.path.join(DATA_DIR, "matchups.csv"))
+        rows = df.to_dict(orient="records")
+        players_df = pd.read_csv(os.path.join(DATA_DIR, "players.csv")) if os.path.exists(os.path.join(DATA_DIR, "players.csv")) else None
+        teams_df = pd.read_csv(os.path.join(DATA_DIR, "teams.csv")) if os.path.exists(os.path.join(DATA_DIR, "teams.csv")) else None
+        p_map = {r["player_id"]: r["player_name"] for _, r in players_df.iterrows()} if players_df is not None else {}
+        t_map = {r["team_id"]: r["team_name"] for _, r in teams_df.iterrows()} if teams_df is not None else {}
         for r in rows:
-            r["batter_name"] = "Rohit Sharma" if r["batter_id"] == 1 else "Virat Kohli"
-            r["bowler_name"] = "Mitchell Starc" if r["bowler_id"] == 9 else "Pat Cummins"
+            r["batter_name"] = p_map.get(r.get("batter_id"), f"Batter {r.get('batter_id')}")
+            r["bowler_name"] = p_map.get(r.get("bowler_id"), f"Bowler {r.get('bowler_id')}")
+            r["batter_team_name"] = t_map.get(r.get("batter_team"), "Team")
+            r["bowler_team_name"] = t_map.get(r.get("bowler_team"), "Team")
             
     if batter or bowler:
         filtered = []
         for r in rows:
-            b_match = not batter or (batter.lower() in r.get("batter_name", "").lower())
-            w_match = not bowler or (bowler.lower() in r.get("bowler_name", "").lower())
+            b_match = not batter or (batter.lower() in str(r.get("batter_name", "")).lower())
+            w_match = not bowler or (bowler.lower() in str(r.get("bowler_name", "")).lower())
             if b_match and w_match:
                 filtered.append(r)
         return filtered
@@ -278,10 +291,10 @@ def get_data_sources():
         ],
         "summary_counts": {
             "teams": 10,
-            "players": 20,
-            "venues": 8,
+            "players": 94,
+            "venues": 32,
             "matches": 500,
-            "matchups": 8,
+            "matchups": 50,
             "features_engineered": 23
         }
     }
