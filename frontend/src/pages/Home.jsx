@@ -1,5 +1,6 @@
 import React from 'react';
 import { Target, Globe, BarChart3, Shield, Cpu, Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
+import WorldCupLegacy from '../components/WorldCupLegacy';
 
 export default function Home({ predictionData, onNavigate, dataSources }) {
   const counts = dataSources?.summary_counts || {
@@ -89,6 +90,9 @@ export default function Home({ predictionData, onNavigate, dataSources }) {
           </div>
         </div>
       </section>
+
+      {/* ICC Men's ODI Cricket World Cup Legacy & History Section */}
+      <WorldCupLegacy onNavigate={onNavigate} />
 
       {/* Featured AI Result Card */}
       <section className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6">
