@@ -20,6 +20,7 @@ import { fetchPrediction2027, fetchTeamsData, fetchDataSources } from './service
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
   const [predictionData, setPredictionData] = useState(null);
+  const [latestPrediction, setLatestPrediction] = useState(null);
   const [teamsData, setTeamsData] = useState([]);
   const [dataSources, setDataSources] = useState(null);
   const [dataLoading, setDataLoading] = useState(true);
@@ -68,11 +69,19 @@ export default function App() {
             )}
 
             {activeTab === 'match-predictor' && (
-              <MatchPredictor onNavigate={setActiveTab} />
+              <MatchPredictor 
+                onNavigate={setActiveTab} 
+                latestPrediction={latestPrediction}
+                onPredictionChange={setLatestPrediction}
+              />
             )}
 
             {activeTab === 'explainable-ai' && (
-              <ExplainableAi predictionData={predictionData} />
+              <ExplainableAi 
+                latestPrediction={latestPrediction}
+                onPredictionChange={setLatestPrediction}
+                onNavigate={setActiveTab}
+              />
             )}
 
             {activeTab === 'team-analytics' && (

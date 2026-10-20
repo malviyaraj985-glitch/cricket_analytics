@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { postMatchPrediction } from '../services/api';
 import { Target, Cpu, CheckCircle, ArrowRight, AlertTriangle } from 'lucide-react';
 
-export default function MatchPredictor({ onNavigate }) {
-  const [teamA, setTeamA] = useState("India");
-  const [teamB, setTeamB] = useState("Australia");
-  const [venue, setVenue] = useState("The Wanderers Stadium");
-  const [tossWinner, setTossWinner] = useState("India");
+export default function MatchPredictor({ onNavigate, latestPrediction, onPredictionChange }) {
+  const [teamA, setTeamA] = useState(latestPrediction?.team_a || "India");
+  const [teamB, setTeamB] = useState(latestPrediction?.team_b || "Australia");
+  const [venue, setVenue] = useState(latestPrediction?.venue || "The Wanderers Stadium");
+  const [tossWinner, setTossWinner] = useState(latestPrediction?.team_a || "India");
   const [tossDecision, setTossDecision] = useState("Bat");
   const [pitchProfile, setPitchProfile] = useState("Balanced");
   const [weather, setWeather] = useState("Clear");
 
   const [loading, setLoading] = useState(false);
-  const [prediction, setPrediction] = useState(null);
+  const [prediction, setPrediction] = useState(latestPrediction || null);
 
   const teamsList = ["India", "Australia", "South Africa", "England", "New Zealand", "Pakistan", "Sri Lanka", "West Indies", "Afghanistan", "Bangladesh"];
   const venuesList = ["The Wanderers Stadium", "SuperSport Park", "Kingsmead Cricket Ground", "Narendra Modi Stadium", "Melbourne Cricket Ground", "Lord's Cricket Ground"];
@@ -30,6 +30,7 @@ export default function MatchPredictor({ onNavigate }) {
         weather: params.weather
       });
       setPrediction(res);
+      onPredictionChange?.(res);
     } catch (err) {
       console.error(err);
     } finally {
@@ -38,7 +39,9 @@ export default function MatchPredictor({ onNavigate }) {
   };
 
   useEffect(() => {
-    runPrediction({ teamA, teamB, venue, tossWinner, tossDecision, pitchProfile, weather });
+    if (!latestPrediction) {
+      runPrediction({ teamA, teamB, venue, tossWinner, tossDecision, pitchProfile, weather });
+    }
   }, []);
 
   const handlePredict = async (e) => {
@@ -247,11 +250,37 @@ export default function MatchPredictor({ onNavigate }) {
               </div>
 
               {/* WHY? Natural Language Explanation */}
-              <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                <h4 className="text-xs font-extrabold text-emerald-400 uppercase tracking-wider">WHY DOES THE MODEL PREDICT THIS?</h4>
+              <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-extrabold text-emerald-400 uppercase tracking-wider flex items-center space-x-1.5">
+                    <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>WHY DOES THE MODEL PREDICT THIS?</span>
+                  </h4>
+                  <button
+                    type="button"
+                    onClick={() => onNavigate('explainable-ai')}
+                    className="text-[11px] text-emerald-400 hover:text-emerald-300 font-bold underline flex items-center space-x-1"
+                  >
+                    <span>Full SHAP Breakdown</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
                 <p className="text-xs text-slate-300 leading-relaxed font-medium">
                   {prediction.shap_explanation?.natural_explanation}
                 </p>
+                {/* Top drivers mini pills */}
+                <div className="flex flex-wrap gap-2 pt-1 border-t border-slate-900">
+                  {prediction.shap_explanation?.top_positive_contributors?.slice(0, 2).map((p, i) => (
+                    <span key={i} className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold rounded-md">
+                      +{p.label}: {p.percentage_impact}
+                    </span>
+                  ))}
+                  {prediction.shap_explanation?.top_negative_contributors?.slice(0, 1).map((n, i) => (
+                    <span key={i} className="px-2 py-0.5 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-bold rounded-md">
+                      -{n.label}: {n.percentage_impact}
+                    </span>
+                  ))}
+                </div>
               </div>
 
               {/* WHAT IF? Button */}

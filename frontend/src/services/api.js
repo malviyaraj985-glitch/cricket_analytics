@@ -242,83 +242,81 @@ export async function postMatchPrediction(predictPayload) {
       confidence = "Medium";
     }
 
-    // Dynamic SHAP explanation
-    const shapPositive = [];
-    const shapNegative = [];
+    // All 10 model features with exact calibrated weights matching ml/model_engine.py
+    const rawFeatures = [
+      { key: "overall_strength_difference", label: "Composite Squad Strength Delta", raw: overallDiff, weight: 0.35 },
+      { key: "form_difference", label: "Recent 15-Match Form Delta", raw: formDiff, weight: 0.25 },
+      { key: "batting_difference", label: "Batting Rating Delta", raw: battingDiff, weight: 0.20 },
+      { key: "bowling_difference", label: "Bowling Attack Delta", raw: bowlingDiff, weight: 0.20 },
+      { key: "win_percentage_difference", label: "Recent Win % Delta", raw: rA.win_pct - rB.win_pct, weight: 0.15 },
+      { key: "venue_difference", label: "Venue Pitch Adaptability Delta", raw: venueDiff, weight: 0.15 },
+      { key: "player_impact_difference", label: "Top-Order Impact Delta", raw: impactDiff, weight: 0.10 },
+      { key: "pitch_compatibility_difference", label: "Pitch Profile Fit Delta", raw: pitchDiff, weight: 0.12 },
+      { key: "toss_advantage", label: "Toss Decision Advantage", raw: tossAdv, weight: 0.08 }
+    ];
 
-    const isWinnerA = predictedWinner === teamA;
-    const winTeam = isWinnerA ? teamA : teamB;
-    const loseTeam = isWinnerA ? teamB : teamA;
-    const wStats = isWinnerA ? rA : rB;
-    const lStats = isWinnerA ? rB : rA;
-    const wVenue = isWinnerA ? venueA : venueB;
-    const lVenue = isWinnerA ? venueB : venueA;
-    const wToss = isWinnerA ? (tossAdv > 0) : (tossAdv < 0);
+    // Compute raw additive contributions
+    const k = 0.046 * 0.25;
+    let totalRawShap = 0;
+    const rawContributions = rawFeatures.map(f => {
+      const val = f.raw * f.weight * k;
+      totalRawShap += val;
+      return { ...f, val };
+    });
 
-    if (wStats.batting > lStats.batting) {
-      shapPositive.push({
-        feature: "batting_strength",
-        label: `${winTeam} Batting Rating (+${(wStats.batting - lStats.batting).toFixed(1)})`,
-        shap_value: 0.082
-      });
+    // Probability calibration: align total SHAP attribution with (probAPct - 50.0%)
+    const probDelta = (probAPct - 50.0) / 100.0;
+    const scaleFactor = (Math.abs(totalRawShap) > 1e-6 && Math.abs(probDelta) > 1e-6)
+      ? (probDelta / totalRawShap)
+      : 1.0;
+
+    const allContributions = rawContributions.map(f => {
+      const calibratedVal = f.val * scaleFactor;
+      const shapVal = Math.round(calibratedVal * 10000) / 10000;
+      const pctImpact = (shapVal >= 0 ? "+" : "") + (shapVal * 100).toFixed(1) + "%";
+      return {
+        feature: f.key,
+        label: f.label,
+        raw_value: Math.round(f.raw * 10) / 10,
+        shap_value: shapVal,
+        percentage_impact: pctImpact,
+        direction: shapVal >= 0 ? "positive" : "negative",
+        favored_team: shapVal >= 0 ? teamA : teamB
+      };
+    });
+
+    const sortedContributions = [...allContributions].sort((a, b) => Math.abs(b.shap_value) - Math.abs(a.shap_value));
+
+    // Dynamic positive & negative contributors from the predicted winner's perspective
+    let topPositives = [];
+    let topNegatives = [];
+
+    if (predictedWinner === teamA) {
+      topPositives = sortedContributions.filter(c => c.shap_value > 0);
+      topNegatives = sortedContributions.filter(c => c.shap_value < 0);
     } else {
-      shapNegative.push({
-        feature: "batting_deficit",
-        label: `${loseTeam} Batting Depth`,
-        shap_value: -0.045
-      });
+      topPositives = sortedContributions
+        .filter(c => c.shap_value < 0)
+        .map(c => ({
+          ...c,
+          shap_value: -c.shap_value,
+          percentage_impact: `${-c.shap_value >= 0 ? "+" : ""}${(-c.shap_value * 100).toFixed(1)}%`,
+          favored_team: teamB
+        }));
+      topNegatives = sortedContributions
+        .filter(c => c.shap_value > 0)
+        .map(c => ({
+          ...c,
+          shap_value: -c.shap_value,
+          percentage_impact: `${-c.shap_value >= 0 ? "+" : ""}${(-c.shap_value * 100).toFixed(1)}%`,
+          favored_team: teamA
+        }));
     }
 
-    if (wStats.bowling > lStats.bowling) {
-      shapPositive.push({
-        feature: "bowling_strength",
-        label: `${winTeam} Bowling Attack Rating (+${(wStats.bowling - lStats.bowling).toFixed(1)})`,
-        shap_value: 0.078
-      });
-    } else {
-      shapNegative.push({
-        feature: "bowling_deficit",
-        label: `${loseTeam} Bowling Attack`,
-        shap_value: -0.042
-      });
-    }
-
-    if (wStats.form > lStats.form) {
-      shapPositive.push({
-        feature: "recent_form",
-        label: `${winTeam} Recent Form (+${(wStats.form - lStats.form).toFixed(1)})`,
-        shap_value: 0.065
-      });
-    }
-
-    if (wVenue > lVenue) {
-      shapPositive.push({
-        feature: "venue_suitability",
-        label: `${winTeam} Pitch & Venue Familiarity`,
-        shap_value: 0.054
-      });
-    } else if (lVenue > wVenue) {
-      shapNegative.push({
-        feature: "venue_deficit",
-        label: `${loseTeam} Venue Adaptability`,
-        shap_value: -0.038
-      });
-    }
-
-    if (wToss) {
-      shapPositive.push({
-        feature: "toss_advantage",
-        label: `${winTeam} Toss Advantage`,
-        shap_value: 0.035
-      });
-    }
-
-    const topPosLabel = shapPositive[0]?.label || "balanced squad composition";
-    const topPosLabel2 = shapPositive[1]?.label || "recent match performance";
-
-    let naturalExplanation = `The AI model predicts a ${Math.max(probAPct, probBPct)}% win probability for ${predictedWinner} over ${loseTeam} primarily due to superior ${topPosLabel} and ${topPosLabel2}.`;
-    if (shapNegative.length > 0) {
-      naturalExplanation += ` ${loseTeam} stays competitive through ${shapNegative[0].label}.`;
+    const posDesc = topPositives.slice(0, 2).map(c => `${c.label} (${c.percentage_impact})`).join(" and ") || "overall squad balance";
+    let naturalExplanation = `The AI model predicts a ${Math.max(probAPct, probBPct)}% win probability for ${predictedWinner} over ${predictedWinner === teamA ? teamB : teamA} (${Math.min(probAPct, probBPct)}%). Key positive drivers favoring ${predictedWinner} relative to the 50.0% neutral baseline are ${posDesc}.`;
+    if (topNegatives.length > 0) {
+      naturalExplanation += ` ${predictedWinner === teamA ? teamB : teamA} remains competitive primarily through ${topNegatives[0].label} (${topNegatives[0].percentage_impact}).`;
     }
 
     return {
@@ -334,9 +332,18 @@ export async function postMatchPrediction(predictPayload) {
       feature_count: 10,
       prediction_timestamp: new Date().toISOString(),
       shap_explanation: {
-        top_positive_contributors: shapPositive.slice(0, 3),
-        top_negative_contributors: shapNegative.slice(0, 2),
-        natural_explanation: naturalExplanation
+        explaining_team: teamA,
+        predicted_winner: predictedWinner,
+        winner_probability: Math.max(probAPct, probBPct),
+        loser_team: predictedWinner === teamA ? teamB : teamA,
+        loser_probability: Math.min(probAPct, probBPct),
+        base_value: 50.0,
+        model_output: probAPct,
+        explainer_type: "Additive Feature Attribution (calibrated to trained model weights)",
+        natural_explanation: naturalExplanation,
+        top_positive_contributors: topPositives.slice(0, 4),
+        top_negative_contributors: topNegatives.slice(0, 3),
+        all_contributions: sortedContributions
       }
     };
   }

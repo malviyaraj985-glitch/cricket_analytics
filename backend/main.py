@@ -164,9 +164,7 @@ def simulate_scenario(req: SimulateRequest):
         venue=venue,
         toss_winner=toss_w,
         pitch_profile=pitch,
-        weather=weather,
-        player_missing_a=player_m_a,
-        player_missing_b=player_m_b
+        weather=weather
     )
     
     delta_a = round(scenario["team_a_probability"] - baseline["team_a_probability"], 1)
