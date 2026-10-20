@@ -52,7 +52,7 @@ export default function App() {
       <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-[90rem] w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+      <main className="flex-1 max-w-[90rem] w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 relative z-0">
         {dataLoading ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-3">
             <div className="w-10 h-10 border-4 border-emerald-500/30 border-t-emerald-500 rounded-full animate-spin"></div>

@@ -66,7 +66,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
   const activeItem = navItems.find((item) => item.id === activeTab) || navItems[0];
 
   return (
-    <header className="bg-slate-950 border-b border-slate-800 sticky top-0 z-50 shadow-md">
+    <header className="bg-slate-950 border-b border-slate-800 sticky top-0 z-[100] shadow-md">
       <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
@@ -125,13 +125,13 @@ export default function Navbar({ activeTab, setActiveTab }) {
               <div
                 ref={menuRef}
                 id="navigation-dropdown-menu"
-                className="absolute right-0 top-full mt-2 w-72 sm:w-80 max-w-[calc(100vw-2rem)] bg-slate-950 border border-slate-800 rounded-2xl shadow-2xl shadow-black/90 p-2.5 z-50 animate-fadeIn max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain"
+                className="absolute right-0 top-full mt-2 w-72 sm:w-80 max-w-[calc(100vw-2rem)] bg-[#020617] border border-slate-800 rounded-2xl shadow-2xl shadow-black p-2.5 z-[100] max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain"
                 style={{ backgroundColor: '#020617', opacity: 1 }}
                 role="menu"
                 aria-orientation="vertical"
               >
                 {/* Menu Header with quick info */}
-                <div className="px-3 py-2 bg-slate-900 border-b border-slate-800 rounded-xl flex items-center justify-between text-xs mb-1.5">
+                <div className="px-3 py-2 bg-[#0f172a] border border-slate-800 rounded-xl flex items-center justify-between text-xs mb-1.5" style={{ backgroundColor: '#0f172a' }}>
                   <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">
                     Navigation Menu
                   </span>
@@ -150,10 +150,11 @@ export default function Navbar({ activeTab, setActiveTab }) {
                         key={item.id}
                         onClick={() => handleNavClick(item.id)}
                         role="menuitem"
+                        style={{ backgroundColor: isActive ? '#10b981' : '#0b1120', opacity: 1 }}
                         className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all text-left ${
                           isActive
                             ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 font-extrabold border border-emerald-400'
-                            : 'text-slate-300 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800/40 hover:border-slate-700'
+                            : 'text-slate-200 hover:text-white bg-[#0b1120] hover:bg-slate-800 border border-slate-800 hover:border-slate-700'
                         }`}
                       >
                         <div className="flex items-center space-x-3 truncate">
@@ -176,7 +177,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
                 </nav>
 
                 {/* Menu Footer */}
-                <div className="px-3 py-2 bg-slate-900/80 border-t border-slate-800/80 rounded-xl text-[10px] text-slate-400 flex items-center justify-between mt-1.5">
+                <div className="px-3 py-2 bg-[#0f172a] border border-slate-800 rounded-xl text-[10px] text-slate-400 flex items-center justify-between mt-1.5" style={{ backgroundColor: '#0f172a' }}>
                   <span>Press <kbd className="px-1 py-0.5 rounded bg-slate-800 font-mono text-[9px] text-slate-300 border border-slate-700">Esc</kbd> to close</span>
                   <span className="text-emerald-400 font-semibold">Active: {activeItem.label}</span>
                 </div>
@@ -191,7 +192,7 @@ export default function Navbar({ activeTab, setActiveTab }) {
       {menuOpen && (
         <div 
           onClick={() => setMenuOpen(false)}
-          className="fixed inset-0 z-40 bg-black/60 transition-opacity"
+          className="fixed inset-0 z-[90] bg-black/75 transition-opacity"
           aria-hidden="true"
         />
       )}
