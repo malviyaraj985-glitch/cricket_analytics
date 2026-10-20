@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Trophy, Target, Cpu, Shield, Users, MapPin, Swords, 
   Sliders, Globe, Activity, History, BookOpen, Menu, X, Check
@@ -119,82 +120,90 @@ export default function Navbar({ activeTab, setActiveTab }) {
                 {activeItem.label}
               </span>
             </button>
-
-            {/* Dropdown Navigation Panel with 100% Solid Opaque Background */}
-            {menuOpen && (
-              <div
-                ref={menuRef}
-                id="navigation-dropdown-menu"
-                className="absolute right-0 top-full mt-2 w-72 sm:w-80 max-w-[calc(100vw-2rem)] bg-[#020617] border border-slate-800 rounded-2xl shadow-2xl shadow-black p-2.5 z-[100] max-h-[calc(100vh-5rem)] overflow-y-auto overscroll-contain"
-                style={{ backgroundColor: '#020617', opacity: 1 }}
-                role="menu"
-                aria-orientation="vertical"
-              >
-                {/* Menu Header with quick info */}
-                <div className="px-3 py-2 bg-[#0f172a] border border-slate-800 rounded-xl flex items-center justify-between text-xs mb-1.5" style={{ backgroundColor: '#0f172a' }}>
-                  <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">
-                    Navigation Menu
-                  </span>
-                  <span className="text-[10px] text-emerald-400 font-mono font-semibold">
-                    12 Modules
-                  </span>
-                </div>
-
-                {/* Clean Vertical Navigation List */}
-                <nav className="space-y-1.5 py-0.5">
-                  {navItems.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = activeTab === item.id;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => handleNavClick(item.id)}
-                        role="menuitem"
-                        style={{ backgroundColor: isActive ? '#10b981' : '#0b1120', opacity: 1 }}
-                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all text-left ${
-                          isActive
-                            ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 font-extrabold border border-emerald-400'
-                            : 'text-slate-200 hover:text-white bg-[#0b1120] hover:bg-slate-800 border border-slate-800 hover:border-slate-700'
-                        }`}
-                      >
-                        <div className="flex items-center space-x-3 truncate">
-                          <div className={`p-1.5 rounded-lg shrink-0 ${
-                            isActive 
-                              ? 'bg-slate-950/20 text-slate-950' 
-                              : 'bg-slate-800 text-emerald-400'
-                          }`}>
-                            <Icon className="w-4 h-4 shrink-0" />
-                          </div>
-                          <span className="truncate tracking-wide">{item.label}</span>
-                        </div>
-
-                        {isActive && (
-                          <Check className="w-4 h-4 text-slate-950 shrink-0 ml-2" />
-                        )}
-                      </button>
-                    );
-                  })}
-                </nav>
-
-                {/* Menu Footer */}
-                <div className="px-3 py-2 bg-[#0f172a] border border-slate-800 rounded-xl text-[10px] text-slate-400 flex items-center justify-between mt-1.5" style={{ backgroundColor: '#0f172a' }}>
-                  <span>Press <kbd className="px-1 py-0.5 rounded bg-slate-800 font-mono text-[9px] text-slate-300 border border-slate-700">Esc</kbd> to close</span>
-                  <span className="text-emerald-400 font-semibold">Active: {activeItem.label}</span>
-                </div>
-              </div>
-            )}
           </div>
 
         </div>
       </div>
 
-      {/* Backdrop overlay to dim the underlying page and capture outside clicks */}
-      {menuOpen && (
-        <div 
-          onClick={() => setMenuOpen(false)}
-          className="fixed inset-0 z-[90] bg-black/75 transition-opacity"
-          aria-hidden="true"
-        />
+      {/* Portal to document.body: renders backdrop & menu at top-level body to eliminate any stacking context traps */}
+      {menuOpen && typeof document !== 'undefined' && createPortal(
+        <>
+          {/* Separate fixed-position backdrop behind the menu with subtle dark overlay to dim the underlying page */}
+          <div 
+            onClick={() => setMenuOpen(false)}
+            className="fixed inset-0 z-[9998] bg-black/75 transition-opacity"
+            aria-hidden="true"
+          />
+
+          {/* Fully Opaque Navigation Menu Panel */}
+          <div
+            ref={menuRef}
+            id="navigation-dropdown-menu"
+            className="fixed top-[4.25rem] right-4 sm:right-6 lg:right-8 w-72 sm:w-80 max-w-[calc(100vw-2rem)] bg-[#020617] border border-slate-800 rounded-2xl shadow-2xl shadow-black p-2.5 z-[9999] max-h-[calc(100vh-5.5rem)] overflow-y-auto overscroll-contain"
+            style={{ backgroundColor: '#020617', opacity: 1 }}
+            role="menu"
+            aria-orientation="vertical"
+          >
+            {/* Menu Header with quick info */}
+            <div 
+              className="px-3 py-2 bg-[#0f172a] border border-slate-800 rounded-xl flex items-center justify-between text-xs mb-1.5"
+              style={{ backgroundColor: '#0f172a' }}
+            >
+              <span className="font-bold text-slate-400 uppercase tracking-wider text-[10px]">
+                Navigation Menu
+              </span>
+              <span className="text-[10px] text-emerald-400 font-mono font-semibold">
+                12 Modules
+              </span>
+            </div>
+
+            {/* Clean Vertical Navigation List */}
+            <nav className="space-y-1.5 py-0.5">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleNavClick(item.id)}
+                    role="menuitem"
+                    style={{ backgroundColor: isActive ? '#10b981' : '#0b1120', opacity: 1 }}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-bold transition-all text-left ${
+                      isActive
+                        ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20 font-extrabold border border-emerald-400'
+                        : 'text-slate-200 hover:text-white bg-[#0b1120] hover:bg-slate-800 border border-slate-800 hover:border-slate-700'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3 truncate">
+                      <div className={`p-1.5 rounded-lg shrink-0 ${
+                        isActive 
+                          ? 'bg-slate-950/20 text-slate-950' 
+                          : 'bg-slate-800 text-emerald-400'
+                      }`}>
+                        <Icon className="w-4 h-4 shrink-0" />
+                      </div>
+                      <span className="truncate tracking-wide">{item.label}</span>
+                    </div>
+
+                    {isActive && (
+                      <Check className="w-4 h-4 text-slate-950 shrink-0 ml-2" />
+                    )}
+                  </button>
+                );
+              })}
+            </nav>
+
+            {/* Menu Footer */}
+            <div 
+              className="px-3 py-2 bg-[#0f172a] border border-slate-800 rounded-xl text-[10px] text-slate-400 flex items-center justify-between mt-1.5"
+              style={{ backgroundColor: '#0f172a' }}
+            >
+              <span>Press <kbd className="px-1 py-0.5 rounded bg-slate-800 font-mono text-[9px] text-slate-300 border border-slate-700">Esc</kbd> to close</span>
+              <span className="text-emerald-400 font-semibold">Active: {activeItem.label}</span>
+            </div>
+          </div>
+        </>,
+        document.body
       )}
     </header>
   );
