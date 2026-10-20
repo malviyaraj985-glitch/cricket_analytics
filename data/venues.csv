@@ -1,9 +1,33 @@
-venue_id,venue_name,city,country,latitude,longitude,pitch_profile,capacity
-1,The Wanderers Stadium,Johannesburg,South Africa,-26.1317,28.0569,Pace-Friendly,34000
-2,SuperSport Park,Centurion,South Africa,-25.8603,28.1894,Pace-Friendly,22000
-3,Kingsmead Cricket Ground,Durban,South Africa,-29.8517,31.0298,Balanced,25000
-4,Narendra Modi Stadium,Ahmedabad,India,23.0917,72.5975,Batting-Friendly,132000
-5,Melbourne Cricket Ground,Melbourne,Australia,-37.82,144.9834,Balanced,100024
-6,Lord's Cricket Ground,London,England,51.5298,-0.1726,Balanced,31100
-7,Eden Gardens,Kolkata,India,22.5646,88.3433,Spin-Friendly,68000
-8,Sydney Cricket Ground,Sydney,Australia,-33.8916,151.2248,Batting-Friendly,48000
+venue_id,venue_name,city,country,latitude,longitude,pitch_profile,capacity,is_wc2027_host,host_status
+1,The Wanderers Stadium,Johannesburg,South Africa,-26.1317,28.0569,Pace-Friendly,34000,1,Confirmed 2027 Host
+2,SuperSport Park,Centurion,South Africa,-25.8603,28.1894,Pace-Friendly,22000,1,Confirmed 2027 Host
+3,Kingsmead Cricket Ground,Durban,South Africa,-29.8517,31.0298,Balanced,25000,1,Confirmed 2027 Host
+4,St George's Park,Gqeberha,South Africa,-33.9634,25.6078,Balanced,19000,1,Confirmed 2027 Host
+5,Newlands Cricket Ground,Cape Town,South Africa,-33.9744,18.4682,Balanced,25000,1,Confirmed 2027 Host
+6,Boland Park,Paarl,South Africa,-33.7431,18.9747,Batting-Friendly,10000,1,Confirmed 2027 Host
+7,Mangaung Oval,Bloemfontein,South Africa,-29.1139,26.2064,Batting-Friendly,20000,1,Confirmed 2027 Host
+8,Buffalo Park,East London,South Africa,-33.0061,27.9178,Bowling-Friendly,16000,1,Confirmed 2027 Host
+9,Harare Sports Club,Harare,Zimbabwe,-17.8183,31.0544,Batting-Friendly,10000,1,Confirmed 2027 Host
+10,Queens Sports Club,Bulawayo,Zimbabwe,-20.1558,28.5919,Balanced,13000,1,Confirmed 2027 Host
+11,Wanderers Cricket Ground,Windhoek,Namibia,-22.5847,17.0942,Batting-Friendly,7000,1,Confirmed 2027 Host
+12,Narendra Modi Stadium,Ahmedabad,India,23.0917,72.5975,Batting-Friendly,132000,0,Historical International
+13,Wankhede Stadium,Mumbai,India,18.9389,72.8258,Batting-Friendly,33108,0,Historical International
+14,Eden Gardens,Kolkata,India,22.5646,88.3433,Spin-Friendly,68000,0,Historical International
+15,M. Chinnaswamy Stadium,Bengaluru,India,12.9788,77.5996,Batting-Friendly,40000,0,Historical International
+16,MA Chidambaram Stadium,Chennai,India,13.0628,80.2792,Spin-Friendly,38200,0,Historical International
+17,Arun Jaitley Stadium,Delhi,India,28.6378,77.2425,Batting-Friendly,41842,0,Historical International
+18,Rajiv Gandhi International Cricket Stadium,Hyderabad,India,17.4065,78.5505,Batting-Friendly,55000,0,Historical International
+19,Melbourne Cricket Ground,Melbourne,Australia,-37.82,144.9834,Balanced,100024,0,Historical International
+20,Sydney Cricket Ground,Sydney,Australia,-33.8916,151.2248,Batting-Friendly,48000,0,Historical International
+21,Adelaide Oval,Adelaide,Australia,-34.9155,138.5961,Batting-Friendly,53583,0,Historical International
+22,Perth Stadium,Perth,Australia,-31.9511,115.889,Pace-Friendly,61266,0,Historical International
+23,Lord's Cricket Ground,London,England,51.5298,-0.1726,Balanced,31100,0,Historical International
+24,The Oval,London,England,51.4837,-0.115,Batting-Friendly,27500,0,Historical International
+25,Edgbaston,Birmingham,England,52.4556,-1.9028,Batting-Friendly,25000,0,Historical International
+26,Trent Bridge,Nottingham,England,52.9369,-1.1322,Batting-Friendly,17500,0,Historical International
+27,Eden Park,Auckland,New Zealand,-36.8756,174.7444,Batting-Friendly,42000,0,Historical International
+28,Hagley Oval,Christchurch,New Zealand,-43.535,172.6178,Pace-Friendly,18000,0,Historical International
+29,Gaddafi Stadium,Lahore,Pakistan,31.5133,74.3331,Batting-Friendly,27000,0,Historical International
+30,R. Premadasa Stadium,Colombo,Sri Lanka,6.9397,79.8719,Spin-Friendly,35000,0,Historical International
+31,Dubai International Cricket Stadium,Dubai,United Arab Emirates,25.0461,55.2189,Balanced,25000,0,Historical International
+32,Kensington Oval,Bridgetown,West Indies,13.1053,-59.6231,Pace-Friendly,28000,0,Historical International

@@ -23,8 +23,10 @@ except ImportError:
     HAS_XGB = False
 
 try:
+    # pyrefly: ignore [missing-import]
+    import lightgbm as lgb  # type: ignore
     HAS_LGB = True
-except ImportError:
+except (ImportError, ModuleNotFoundError):
     HAS_LGB = False
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -75,19 +77,35 @@ TEAM_STATS = {
 
 def get_venue_rating(team: str, venue: str) -> float:
     """Returns venue suitability rating for a team symmetrically."""
-    t_data = TEAM_STATS.get(team, {"african_host": 70.0, "subcontinent": 75.0})
-    if any(k in venue for k in ["Wanderers", "Centurion", "Kingsmead"]):
+    t_data = TEAM_STATS.get(team, {"african_host": 70.0, "subcontinent": 75.0, "pace_rating": 80.0, "spin_rating": 80.0})
+    # African Host Venues (South Africa, Zimbabwe, Namibia)
+    if any(k in venue for k in ["Wanderers", "Centurion", "SuperSport", "Kingsmead", "St George", "Newlands", "Boland", "Mangaung", "Buffalo", "Harare", "Queens", "Windhoek"]):
         return float(t_data.get("african_host", 75.0))
-    elif any(k in venue for k in ["Narendra Modi", "Eden Gardens"]):
+    # Subcontinent Venues (India, Pakistan, Sri Lanka)
+    elif any(k in venue for k in ["Narendra Modi", "Wankhede", "Eden Gardens", "Chinnaswamy", "Chidambaram", "Arun Jaitley", "Rajiv Gandhi", "Gaddafi", "Premadasa"]):
         return float(t_data.get("subcontinent", 75.0))
-    elif "Melbourne" in venue or "Sydney" in venue:
+    # Australian Venues
+    elif any(k in venue for k in ["Melbourne", "Sydney", "Adelaide", "Perth"]):
         if team == "Australia": return 95.0
         if team in ["New Zealand", "South Africa"]: return 84.0
         return 76.0
-    elif "Lord's" in venue:
+    # English Venues
+    elif any(k in venue for k in ["Lord's", "The Oval", "Edgbaston", "Trent Bridge"]):
         if team == "England": return 95.0
         if team in ["Australia", "South Africa", "New Zealand"]: return 83.0
         return 76.0
+    # New Zealand Venues
+    elif any(k in venue for k in ["Eden Park", "Hagley Oval"]):
+        if team == "New Zealand": return 95.0
+        if team in ["Australia", "England", "South Africa"]: return 82.0
+        return 75.0
+    # West Indies Venues
+    elif "Kensington" in venue or "Barbados" in venue:
+        if team == "West Indies": return 92.0
+        return float(t_data.get("pace_rating", 78.0) * 0.95)
+    # UAE Venues
+    elif "Dubai" in venue:
+        return float(t_data.get("subcontinent", 76.0) * 0.95)
     return 75.0
 
 def generate_symmetric_dataset(n_pairs: int = 300) -> Tuple[pd.DataFrame, pd.Series, pd.DataFrame]:

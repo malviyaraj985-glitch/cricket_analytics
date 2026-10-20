@@ -40,6 +40,8 @@ CREATE TABLE IF NOT EXISTS `venues` (
     `longitude` DECIMAL(9,6),
     `pitch_profile` ENUM('Batting-Friendly', 'Bowling-Friendly', 'Balanced', 'Pace-Friendly', 'Spin-Friendly') DEFAULT 'Balanced',
     `capacity` INT,
+    `is_wc2027_host` BOOLEAN DEFAULT FALSE,
+    `host_status` VARCHAR(50) DEFAULT 'Historical International',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -152,13 +154,22 @@ CREATE TABLE IF NOT EXISTS `player_form` (
     `player_id` INT NOT NULL,
     `as_of_date` DATE NOT NULL,
     `matches_window` INT DEFAULT 10,
+    `matches` INT DEFAULT 0,
+    `innings` INT DEFAULT 0,
     `runs` INT DEFAULT 0,
     `batting_average` DECIMAL(5,2) DEFAULT 0.0,
     `strike_rate` DECIMAL(6,2) DEFAULT 0.0,
     `fifties` INT DEFAULT 0,
     `hundreds` INT DEFAULT 0,
+    `high_score` VARCHAR(15) DEFAULT '0',
     `wickets` INT DEFAULT 0,
-    `economy` DECIMAL(4,2) DEFAULT 0.0,
+    `bowling_average` DECIMAL(5,2) DEFAULT NULL,
+    `economy` DECIMAL(4,2) DEFAULT NULL,
+    `bowling_strike_rate` DECIMAL(5,2) DEFAULT NULL,
+    `best_bowling` VARCHAR(20) DEFAULT 'N/A',
+    `catches` INT DEFAULT 0,
+    `stumpings` INT DEFAULT 0,
+    `dismissals` INT DEFAULT 0,
     `recent_form_score` DECIMAL(5,2) DEFAULT 0.0,
     `venue_form_score` DECIMAL(5,2) DEFAULT 0.0,
     FOREIGN KEY (`player_id`) REFERENCES `players`(`player_id`)
@@ -177,6 +188,8 @@ CREATE TABLE IF NOT EXISTS `venue_stats` (
     `spin_wicket_rate` DECIMAL(5,2) DEFAULT 0.0,
     `avg_run_rate` DECIMAL(4,2) DEFAULT 0.0,
     `venue_balance_score` DECIMAL(5,2) DEFAULT 0.0,
+    `sample_window` VARCHAR(100) DEFAULT 'Historical ODI Records',
+    `data_source` VARCHAR(150) DEFAULT 'Official ICC / ESPNcricinfo Records',
     FOREIGN KEY (`venue_id`) REFERENCES `venues`(`venue_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

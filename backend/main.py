@@ -100,10 +100,11 @@ def get_team_by_id(team_id: int):
 
 @app.get("/api/players")
 def get_players(team_id: Optional[int] = None):
+    cols = "p.*, t.team_name, pf.matches, pf.innings, pf.runs, pf.batting_average, pf.strike_rate, pf.hundreds, pf.fifties, pf.high_score, pf.wickets, pf.bowling_average, pf.economy, pf.bowling_strike_rate, pf.best_bowling, pf.catches, pf.stumpings, pf.dismissals, pf.recent_form_score"
     if team_id:
-        rows = query_db("SELECT p.*, t.team_name, pf.runs, pf.batting_average, pf.strike_rate, pf.wickets, pf.economy, pf.recent_form_score FROM players p JOIN teams t ON p.team_id = t.team_id LEFT JOIN player_form pf ON p.player_id = pf.player_id WHERE p.team_id = ?", (team_id,))
+        rows = query_db(f"SELECT {cols} FROM players p JOIN teams t ON p.team_id = t.team_id LEFT JOIN player_form pf ON p.player_id = pf.player_id WHERE p.team_id = ?", (team_id,))
     else:
-        rows = query_db("SELECT p.*, t.team_name, pf.runs, pf.batting_average, pf.strike_rate, pf.wickets, pf.economy, pf.recent_form_score FROM players p JOIN teams t ON p.team_id = t.team_id LEFT JOIN player_form pf ON p.player_id = pf.player_id")
+        rows = query_db(f"SELECT {cols} FROM players p JOIN teams t ON p.team_id = t.team_id LEFT JOIN player_form pf ON p.player_id = pf.player_id")
     if not rows and os.path.exists(os.path.join(DATA_DIR, "players.csv")):
         return pd.read_csv(os.path.join(DATA_DIR, "players.csv")).to_dict(orient="records")
     return rows
@@ -117,9 +118,20 @@ def get_player_by_id(player_id: int):
 
 @app.get("/api/venues")
 def get_venues():
-    rows = query_db("SELECT v.*, vs.avg_first_innings_score, vs.avg_second_innings_score, vs.chasing_success_pct, vs.pace_wicket_rate, vs.spin_wicket_rate, vs.avg_run_rate, vs.venue_balance_score FROM venues v LEFT JOIN venue_stats vs ON v.venue_id = vs.venue_id")
+    rows = query_db("""
+        SELECT v.*, vs.matches, vs.avg_first_innings_score, vs.avg_second_innings_score, 
+               vs.chasing_success_pct, vs.pace_wicket_rate, vs.spin_wicket_rate, 
+               vs.avg_run_rate, vs.venue_balance_score, vs.sample_window, vs.data_source 
+        FROM venues v 
+        LEFT JOIN venue_stats vs ON v.venue_id = vs.venue_id
+    """)
     if not rows and os.path.exists(os.path.join(DATA_DIR, "venues.csv")):
-        return pd.read_csv(os.path.join(DATA_DIR, "venues.csv")).to_dict(orient="records")
+        v_df = pd.read_csv(os.path.join(DATA_DIR, "venues.csv"))
+        if os.path.exists(os.path.join(DATA_DIR, "venue_stats.csv")):
+            vs_df = pd.read_csv(os.path.join(DATA_DIR, "venue_stats.csv"))
+            merged = pd.merge(v_df, vs_df, on="venue_id", how="left")
+            return merged.to_dict(orient="records")
+        return v_df.to_dict(orient="records")
     return rows
 
 @app.get("/api/venues/{venue_id}")

@@ -73,6 +73,8 @@ SELECT
     v.country,
     v.pitch_profile,
     v.capacity,
+    v.is_wc2027_host,
+    v.host_status,
     vs.matches,
     vs.avg_first_innings_score,
     vs.avg_second_innings_score,
@@ -80,7 +82,9 @@ SELECT
     vs.pace_wicket_rate,
     vs.spin_wicket_rate,
     vs.avg_run_rate,
-    vs.venue_balance_score
+    vs.venue_balance_score,
+    vs.sample_window,
+    vs.data_source
 FROM venues v
 LEFT JOIN (
     SELECT vs1.* 
